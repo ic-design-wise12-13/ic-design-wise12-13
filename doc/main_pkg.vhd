@@ -24,8 +24,9 @@ package main_pkg is
 		kc_mode_imp:          std_logic;
 	end record;
 
-	-- buffered time signals (including seconds)
+	-- time signals, both for buffered and unbuffered times
 	type time_signals is record
+		-- all signals are in BCD format!
 		dayofweek:            unsigned(2 downto 0);
 		day:                  unsigned(5 downto 0);
 		hour:                 unsigned(5 downto 0);
@@ -43,8 +44,8 @@ package main_pkg is
 	component time_buffer is
 		port(
 			uni:               in  universal_signals;
-			time_in:           in  time_signals;
-			time_out:          out time_signals
+			time_in:           in  time_signals; -- input time signal from dcf77_eval
+			time_out:          out time_signals  -- buffered output signal
 		);
 	end component;
 
@@ -113,13 +114,12 @@ end package;
 
 -- assignment of tasks to team members:
 --
---                implementer | supervisor
--- time_buffer    Mathias     | Sophia
--- display_driver Mathias     | Sophia
--- mode_fsm       Fabian      | Max
--- display_mux    Fabian      | Max
--- mode_time      Max         | Tobi
--- mode_date      Tobi        | Mathias
--- mode_alarm     Sophia      | Fabian
--- mode_countdown Tobi        | Mathias
--- uhrenbaustein  Sophia      | Fabian
+--                  implementer | supervisor
+-- time_buffer      Mathias     | Sophia
+-- display_driver   Mathias     | Sophia
+-- mode_fsm         Fabian      | Tobi
+-- display_mux      Fabian      | Tobi
+-- mode_time_date   Tobi        | Mathias
+-- mode_alarm       Sophia      | Fabian
+-- mode_countdown   Tobi        | Mathias
+-- uhrenbaustein    Sophia      | Fabian
