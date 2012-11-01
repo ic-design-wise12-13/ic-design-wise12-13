@@ -69,9 +69,10 @@ package main_pkg is
 			uni:               in  universal_signals;
 			keys:              in  keypad_signals;
 
-			visible:           out std_logic_vector(num_modes - 1 downto 0); -- signal to each module whether it has keyboard focus and is visible (one-in-n)
-			return_to_default: in  std_logic_vector(num_modes - 1 downto 0); -- signal from each module, whether the default state should be activated instantly
-			modified:          in  std_logic_vector(num_modes - 1 downto 0)  -- signal from each module, whether the next mode key press should return to the default state
+			alarm_on:          in  std_logic; -- whether the alarm is ringing: force the alarm module to have keyboard focus
+
+			keyboard_focus:    out std_logic_vector(num_modes - 1 downto 0); -- signal to each module whether it has keyboard focus
+			visible:           out std_logic_vector(num_modes - 1 downto 0)  -- control signal to display_mux
 		);
 	end component;
 
@@ -81,13 +82,9 @@ package main_pkg is
 			uni:               in  universal_signals;
 			keys:              in  keypad_signals;
 			current_time:      in  time_signals;
-			alarm:             in  std_logic; -- whether the alarm is ringing: ignore keypresses except for the alarm module itself
-
-			characters:        out character_array_2d(3 downto 0, 19 downto 0);
-
 			keyboard_focus:    in  std_logic;
-			return_to_default: out std_logic;
-			modified:          out std_logic
+
+			characters:        out character_array_2d(3 downto 0, 19 downto 0)
 
 			-- plus module-specific outputs
 		);
