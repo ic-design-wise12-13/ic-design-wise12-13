@@ -106,24 +106,12 @@
 
 		% mux
 		\draw (4,-1.25) -- (4.5, -1.75) -- (4.5,-3.5) -- (4,-4) -- cycle;
+		\node[rotate=90] at (4.25,-2.625) {display\_mux};
 
 		% top level module
 		\draw[dashed,gray] (-.75,0) rectangle (8.5, -6.25);
 	\end{tikzpicture}
 \end{frame}
-
-%\begin{tabular}{lll}
-%	\toprule
-%							& implement   & supervise  \\ \midrule
-%	time\_buffer      & Mathias     & Sophia     \\
-%	display\_driver   & Mathias     & Sophia     \\
-%	mode\_fsm         & Fabian      & Tobi       \\
-%	display\_mux      & Fabian      & Tobi       \\
-%	mode\_time\_date  & Tobi        & Mathias    \\
-%	mode\_alarm       & Sophia      & Fabian     \\
-%	mode\_countdown   & Tobi        & Mathias    \\
-%	uhrenbaustein     & Sophia      & Fabian     \\ \bottomrule
-%\end{tabular}
 
 \begin{frame}{Workload Distribution}
 	\begin{columns}
@@ -201,6 +189,46 @@
 			\end{tikzpicture}
 		\end{column}
 	\end{columns}
+\end{frame}
+
+\begin{frame}{Common System Integration}
+	\begin{itemize}
+		\item Common data format: VHDL package for all modules % already created
+		\item Use git to synchronize efforts
+		\item E-Mail for discussion
+		\item Top level module is treated like any other module
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Testing strategy}
+	\begin{enumerate}
+		\item person assign to module creates individual testbench
+		\item test corner cases, e.g.: \begin{itemize}
+			\item correct behavior when alarm is ringing
+			\item invalid DCF77 signal
+			\item reset
+			\item continued countdown in background
+		\end{itemize}
+		\item supervisor checks module and testbench after realization
+		\item tests on actual hardware
+	\end{enumerate}
+\end{frame}
+
+\begin{frame}{Testing strategy}
+	\begin{center}
+		\begin{tabular}{lll}
+			\toprule
+									& implement   & supervise  \\ \midrule
+			time\_buffer      & Mathias     & Sophia     \\
+			display\_driver   & Mathias     & Sophia     \\
+			mode\_fsm         & Fabian      & Tobi       \\
+			display\_mux      & Fabian      & Tobi       \\
+			mode\_time\_date  & Tobi        & Mathias    \\
+			mode\_alarm       & Sophia      & Fabian     \\
+			mode\_countdown   & Tobi        & Mathias    \\
+			uhrenbaustein     & Sophia      & Fabian     \\ \bottomrule
+		\end{tabular}
+	\end{center}
 \end{frame}
 
 \begin{frame}[fragile]{Display Driver VHDL component}
