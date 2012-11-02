@@ -231,22 +231,6 @@
 	\end{center}
 \end{frame}
 
-\begin{frame}[fragile]{Display Driver VHDL component}
-\begin{verbatim}
-component display_driver is
-  port(
-    uni:        in  universal_signals;
-    characters: in  character_array_2d(3 downto 0,
-                                      19 downto 0);
-    d_en:       out std_logic;
-    d_rw:       out std_logic;
-    d_rs:       out std_logic;
-    d_data:     out std_logic_vector(7 downto 0)
-  );
-end component;
-\end{verbatim}
-\end{frame}
-
 \begin{frame}{Display Timing}
 	\begin{tikzpicture}
 		\foreach \x in {0,2,4,6} \draw (\x-0.1,1) -- (\x+0.1,0) -- (\x+0.9,0) -- (\x+1.1,1) -- (\x+1.9,1);
@@ -344,34 +328,67 @@ end component;
 	\end{tikzpicture}
 \end{frame}
 
-\begin{frame}[fragile]{Clock Buffer VHDL component}
-\begin{verbatim}
-type time_signals is record
-  dayofweek:  unsigned(2 downto 0);
-  [...]
-  minute:     unsigned(6 downto 0);
-  valid:      std_logic;
-end record;
+\begin{frame}{Clock Buffer Circuit}
+	\begin{tikzpicture}
+		\tikzset{dcf update/.style={}}
+		\tikzset{dcf update fill/.style={}}
+		\tikzset{counter update/.style={}}
+		\tikzset{counter update fill/.style={}}
+		\only<2> {
+			\tikzset{dcf update/.style={color=red}}
+			\tikzset{dcf update fill/.style={fill=red}}
+		}
+		\only<3> {
+			\tikzset{counter update/.style={color=red}}
+			\tikzset{counter update fill/.style={fill=red}}
+		}
 
-component time_buffer is
-  port(
-    uni:      in  universal_signals;
-    time_in:  in  time_signals;
-    time_out: out time_signals
-  );
-end component;
-\end{verbatim}
-\end{frame}
+		\node[rectangle,draw=black,minimum height=0.75cm,minimum width=4cm,above right] at (0,-1) {+ 1 min, valid <= 0};
+		\node[rectangle,draw=black,minimum height=2.75cm,minimum width=1cm,above right] at (2,-4) {};
+		\node[rectangle,draw=black,minimum height=0.75cm,minimum width=1cm,above right] at (0,-3.5) {$\geq 1$};
+		\node[rectangle,draw=black,minimum height=0.75cm,minimum width=1cm,above right] at (-.25,-5.5) {$\geq 1$};
+		\node[rectangle,draw=black,minimum height=0.75cm,minimum width=2.25cm,above right] at (1,-5.5) {counter};
+		\node[rectangle,draw=black,minimum height=0.75cm,minimum width=2.75cm,above right] at (3.5,-5.5) {= 59999};
 
-\begin{frame}{Clock Buffer Design}
-	\begin{itemize}
-		\item identical input and output format
-		\item update internal registers if input is valid
-		\item after 600000 cycles of invalid input, increment internal registers
-		\item increment logic is a simple ripple-carry adder
-		\item some logic to properly handle the day of the month
-		\item consider 00 to not be a leap year
-	\end{itemize}
+		\draw (.75,-1.25) -- (1.25,-1.50) -- (1.25,-2.25) -- (.75,-2.50) -- cycle;
+
+		% time signals
+		\draw[red!50!black,line width=2pt,->,counter update] (0,-0.625) -- (-.25,-0.625) -- (-.25,-1.666667) -> (.75,-1.666667) node[right,black,counter update] {0};
+		\draw[red!50!black,line width=2pt,->,dcf update] (-1,-2.083333) node[left,black] {DCF77\_dec} -> (.75,-2.083333) node[right,black,dcf update] {1};
+		\draw[red!50!black,line width=2pt,->, dcf update,counter update] (1.25,-1.875) -> (2,-1.875) node[right,black,dcf update,counter update] {D};
+		\draw[red!50!black,line width=2pt,->] (4.25,-1.875) -- (7,-1.875);
+		\draw[red!50!black,line width=2pt,->,counter update] (3,-1.875) -- (4.25,-1.875) -- (4.25,-.625) -> (4,-.625);
+
+		% OR gate outputs
+		\draw[->,dcf update,counter update] (1,-3.125) -> (2,-3.125) node[right] {E};
+		\draw[->,dcf update,counter update] (1.5,-3.125) -- (1.5,-3.75) -- (-.5,-3.75) -- (-.5,-5) -> (-.25,-5);
+		\fill[dcf update fill,counter update fill] (1.5,-3.125) circle (1pt);
+		\draw[->,dcf update,counter update] (.75,-5.125) -> (1,-5.125) node[right] {R};
+		\draw[->] (-.75,-4.25) -- (-.75,-5.25) -> (-.25,-5.25);
+
+		% OR gate / MUX inputs
+		\fill[dcf update fill] (-.25,-2.083333) circle (1pt);
+		\draw[->,dcf update] (-.25,-2.083333) -- (-.25,-3) -> (0,-3);
+		\draw[->,dcf update] (-.25,-2.625) -- (1,-2.625) -> (1,-2.375);
+		\fill[dcf update fill] (-.25,-2.625) circle (1pt);
+		\draw[->,counter update] (6.25,-5.125) -- (6.5,-5.125) -- (6.5,-4.5) -- (-.25,-4.5) -- (-.25,-3.25) -- (0,-3.25);
+
+		% counter value
+		\draw[->,line width=2pt] (3.25,-5.125) -> (3.5,-5.125);
+
+		% clock and reset lines
+		\draw[white!50!black,line width=2pt] (-1,-4.25) node[left,black] {clk, reset} -- (3.25,-4.25);
+		\draw[->] (2.333333,-4.25) -- (2.333333,-4) node[above] {R};
+		\draw[->] (2.666667,-4.25) -- (2.666667,-4);
+		\draw (2.666667,-4) +(0.173205,0) -- +(0,.2) -- +(-0.173205,0);
+		\draw[->] (3,-4.25) ->  (3,-4.75);
+		\draw (3,-4.75) +(0.173205,0) -- +(0,-.2) -- +(-0.173205,0);
+		\fill (2.333333,-4.25) circle (1pt);
+		\fill (2.666667,-4.25) circle (1pt);
+		\fill (3,-4.25) circle (1pt);
+		\fill (-.75,-4.25) circle (1pt);
+
+	\end{tikzpicture}
 \end{frame}
 
 \end{document}
