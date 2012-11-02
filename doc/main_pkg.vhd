@@ -103,7 +103,7 @@ package main_pkg is
 		port(
 			uni:               in  universal_signals;
 			visible:           in  std_logic_vector(num_modes - 1 downto 0);
-			module_characters: out character_array_3d(num_modes - 1 downto 0, 3 downto 0, 19 downto 0);
+			module_characters: in character_array_3d(num_modes - 1 downto 0, 3 downto 0, 19 downto 0);
 			characters:        out character_array_2d(3 downto 0, 19 downto 0)
 		);
 	end component;
