@@ -291,7 +291,7 @@
 \end{frame}
 
 \begin{frame}{Display Driver Bus FSM}
-	\begin{tikzpicture}[text width=1.3cm,align=center,font=\tiny,auto]
+	\begin{tikzpicture}[every state/.style={text width=1.3cm,align=center,node distance=.5cm},font=\tiny,auto]
 		\node[text width=4cm] at (2,1.2) {All transitions occur on CLK$\uparrow$};
 		\node[state] (S0) at (0, 0) { E = 0 \\ TXDONE = 0 };
 		\node[state] (S1) at (4, 0) { E = 1 \\ TXDONE = 0 };
@@ -305,7 +305,7 @@
 \end{frame}
 
 \begin{frame}{Display Driver Refresh FSM}
-	\begin{tikzpicture}[text width=1.3cm,align=center,font=\tiny,node distance=.5cm,auto]
+	\begin{tikzpicture}[every state/.style={text width=1.3cm,align=center,node distance=.5cm},font=\tiny,auto]
 		\node[right,text width=100cm,align=left] at (2,1.2) {All transitions occur on CLK$\uparrow$ if TXDONE = 1};
 		\node[state]                       (FunctionSet)  { RS = 0 \\ D = 0x38 \\ SRMUX = X \\ SRLOAD = X };
 		\node[state,right=of FunctionSet]  (DisplayOnOff) { RS = 0 \\ D = 0x0C \\ SRMUX = X \\ SRLOAD = X };
@@ -357,7 +357,7 @@
 		\draw[red!50!black,line width=2pt,->,dcf update] (-1,-2.083333) node[left,black] {DCF77\_dec} -> (.75,-2.083333) node[right,black,dcf update] {1};
 		\draw[red!50!black,line width=2pt,->, dcf update,counter update] (1.25,-1.875) -> (2,-1.875) node[right,black,dcf update,counter update] {D};
 		\draw[red!50!black,line width=2pt,->] (4.25,-1.875) -- (7,-1.875);
-		\draw[red!50!black,line width=2pt,->,counter update] (3,-1.875) -- (4.25,-1.875) -- (4.25,-.625) -> (4,-.625);
+		\draw[red!50!black,line width=2pt,->,counter update] (3,-1.875) node[left,black] {Q} -- (4.25,-1.875) -- (4.25,-.625) -> (4,-.625);
 
 		% OR gate outputs
 		\draw[->,dcf update,counter update] (1,-3.125) -> (2,-3.125) node[right] {E};

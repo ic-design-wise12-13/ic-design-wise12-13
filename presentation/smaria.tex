@@ -220,7 +220,7 @@
   \end{frame}
 
   \begin{frame}{mode\_alarm FSM:alarm on}
-		\begin{tikzpicture}[text width=1.3cm,align=center,font=\tiny,node distance=.5cm,auto]
+		\begin{tikzpicture}[every state/.style={text width=1.3cm,align=center,node distance=.5cm},font=\tiny,auto]
 		  \node[right,text width=100cm,align=left] at (2,1.5) {All transitions occur on CLK$\uparrow$};
 		  \node[state,                              minimum size=2.3cm](AlarmOnA) { ALARM ON   \\ al\_on = 1 \\ alarm\_on = 1 \\ snooze <= alarm\_time };
 		  \node[state,right=of AlarmOnA,xshift=2cm, minimum size=2.3cm](Snooze)   { SNOOZE     \\ al\_on = 0 \\ alarm\_on = 0 \\ snooze <= current\_time + 5min };
