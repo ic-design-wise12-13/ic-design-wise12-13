@@ -159,25 +159,39 @@
 	\end{tikzpicture}
  \end{frame}
 \section{Alarm}
-%  \begin{frame}{Alarm time}
-%     \begin{tikzpicture}[align=center,font=\small,node distance=.5cm,auto]
-%      \node[above left] at (.25,-.6){kc\_minus\_imp};
-%      \draw[red!50!black,line width=2pt,->] (-0.5,-.5) -- (0.5,-.5);
-%      \node[above left] at (.25,-1.1){kc\_plus\_imp};
-%      \draw[red!50!black,line width=2pt,->] (-0.5,-1) -- (0.5,-1);
-%      \node[above left] at (.25, -1.6){key\_focus};
-% 		  \draw[red!50!black,line width=2pt,->] (-0.5,-1.5) -- (0.5,-1.5);
-%      \node[above left] at (.25, -2.1){alarm\_on};
-% 		  \draw[blue!30!white,line width=2pt,->] (-0.5,-2) -- (0.5,-2);
-%      \node[above left] at (.25, -4.1){reset};
-% 		  \draw[red!50!black,line width=2pt,->] (-0.5,-4) -- (0.5,-4);
-%
-% 		  \node[rectangle,draw=black,minimum height=2cm,minimum width=2.25cm,above right] at (.5,-2.25) {+/-\\ripple\\carry};
-%	
-%
-%
-%    \end{tikzpicture}
-%  \end{frame}
+  \begin{frame}{Alarm time}
+     \begin{tikzpicture}[align=center,font=\small,node distance=.5cm,auto]
+      %input signals
+      \node[above left] at (.25,-.1){kc\_minus\_imp};
+      \draw[green!50!black,line width=2pt,->] (-0.5,0) -- (0.5,0);
+      \node[above left] at (.25,-1.1){kc\_plus\_imp};
+      \draw[green!50!black,line width=2pt,->] (-0.5,-1) -- (0.5,-1);
+      \node[above right] at (2,-1.85){00:07};
+      \draw[black,line width=1pt,->] (2,-1.75) -> (3.5,-1.75);
+      \node[above left] at (.25, -3.1){reset};
+ 		  \draw[gray,line width=2pt,->] (-0.5,-3) -- (3.75,-3) -> (3.75,-2.25);
+
+      %internal signals
+      \draw[black,line width=1pt,->](3,-.75) -> (3.5,-.75);
+      \draw[black,line width=1pt,->](4,-1.25) -> (5,-1.25);
+
+      %+/-
+ 		  \node[rectangle,draw=black,minimum height=1.5cm,minimum width=2.5cm,above right] at (.5,-1.25) {+/- ripple carry};
+      %mux
+      \draw (3.5,0) -- (4,-.5) -- (4,-2) -- (3.5,-2.5)--cycle;
+	    \node[above right] at (3.5,-1){0};
+      \node[above right] at (3.5,-2){1};
+      %register
+      \node[rectangle,draw=black,minimum height=2.5cm,minimum width=2.25cm,above right] at (5,-2.5) {alarm\_time};
+	    \node[red,above right] at (5,-.5){R};    
+      \draw (6.75,-2.5)--(6.875,-2.325) -- (7,-2.5);
+
+      %output
+      \draw[blue!70!black,line width=2pt,->] (7.25,-1.25) -> (8.5,-1.25);
+      \draw[blue!70!black,line width=2pt,->] (7.5,-1.25) -- (7.5,.75) -- (2,.75) -> (2,0.2); 
+
+    \end{tikzpicture}
+  \end{frame}
 
   \begin{frame}{mode\_alarm overview}
     \begin{tikzpicture}[align=center,font=\small,node distance=.5cm,auto]
@@ -242,7 +256,7 @@
     \end{tikzpicture}
   \end{frame}
 
-  \begin{frame}{mode\_alarm FSM:alarm on}
+  \begin{frame}{mode\_alarm FSM:AlarmOn}
 		\begin{tikzpicture}[every state/.style={text width=1.3cm,align=center,node distance=.5cm},font=\tiny,auto]
 		  \node[right,text width=100cm,align=left] at (2,1.5) {All transitions occur on CLK$\uparrow$};
 		  \node[state,                              minimum size=2.3cm](AlarmOnA) { ALARM ON   \\ al\_on = 1 \\ alarm\_on = 1 \\ snooze <= alarm\_time };
