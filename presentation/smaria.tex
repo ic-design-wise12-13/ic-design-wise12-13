@@ -8,8 +8,12 @@
 \usepackage{tikz}
 \usepackage{verbatim}
 \usepackage{amsmath}
+\usepackage{booktabs}
 \usepackage[small,labelformat=empty]{caption}
 \usepackage{url}
+\usepackage{colortbl}
+\usetikzlibrary{automata,positioning}
+
 
 \usetheme{Frankfurt}
 %\usetheme{Warsaw}
@@ -206,9 +210,26 @@
     \end{tikzpicture}
   \end{frame}
 
-  \begin{frame}{mode\_alarm alarm\_on FSM}
-    \begin{tikzpicture}
-    \end{tikzpicture}
+  \begin{frame}{mode\_alarm FSM:alarm on}
+		\begin{tikzpicture}[text width=1.3cm,align=center,font=\tiny,node distance=.5cm,auto]
+		  \node[right,text width=100cm,align=left] at (2,1.5) {All transitions occur on CLK$\uparrow$};
+		  \node[state,                              minimum size=2.3cm](AlarmOnA) { ALARM ON   \\ al\_on = 1 \\ alarm\_on = 1 \\ snooze <= alarm\_time };
+		  \node[state,right=of AlarmOnA,xshift=2cm, minimum size=2.3cm](Snooze)   { SNOOZE     \\ al\_on = 0 \\ alarm\_on = 0 \\ snooze <= current\_time + 5min };
+		  \node[state,below=of Snooze,  yshift=-1cm,minimum size=2.3cm](AlarmOnB) { ALARM ON   \\ al\_on = 1 \\ alarm\_on = 1 \\ };
+		  \node[state,below=of AlarmOnA,yshift=-1cm,minimum size=2.3cm](AlarmOff) { ALARM OFF  \\ al\_on = 0 \\ alarm\_on = 0 \\ };
+
+		  \path[->] (AlarmOnA) ++(-3,0) edge (AlarmOnA)
+		            (AlarmOnA)     edge             node {kc\_act\_imp}                 (Snooze)
+		            (AlarmOnA)     edge[bend right] node {kc\_act\_long}                (AlarmOff)
+              	(AlarmOnA)     edge[bend left]  node { >1min}                       (AlarmOff)
+		            (AlarmOnB)     edge[bend left]  node {kc\_act\_imp}                 (Snooze)
+		            (AlarmOnB)     edge[bend left]  node {kc\_act\_long}                (AlarmOff)
+  	            (AlarmOnB)     edge[bend right] node {>1min}                        (AlarmOff)
+                (Snooze)       edge[bend left]  node {snooze=current\_time}         (AlarmOnB)
+
+
+
+	  \end{tikzpicture}
   \end{frame}
 \end{document}
 
