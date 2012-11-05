@@ -97,9 +97,9 @@ end component;
 \end{frame}
 
 \begin{frame}{Time and Date FSM}
-	\begin{tikzpicture}[text width=2cm,align=center,font=\tiny,auto]
+	\begin{tikzpicture}[every state/.style={text width=2cm,align=center},font=\tiny,auto]
 %		\node[text width=4cm] at (4,1.2) {All transitions occur on CLK$\uparrow$};
-		\node[state] (S0) at (12, -2) { Display Time };
+		\node[state] (S0) at (14, -2) { Display Time };
 		\node[state] (S1) at (8, -2) { Display Time \\ and Date };
 
 		\path[->] (S0) edge node {mode\_key AND  focus\_on} (S1)
