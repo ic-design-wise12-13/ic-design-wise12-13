@@ -1,59 +1,6 @@
-\documentclass{beamer}
-%\usepackage[latin1]{inputenc}
-%\usepackage{lmodern}
-\usepackage{times}
-\usepackage[T1]{fontenc}
-\usepackage{graphicx}
-\usepackage{bm}
-\usepackage{tikz}
-\usepackage{verbatim}
-\usepackage{amsmath}
-\usepackage{booktabs}
-\usepackage[small,labelformat=empty]{caption}
-\usepackage{url}
-\usepackage{colortbl}
-\usetikzlibrary{automata,positioning}
-\usetikzlibrary{shapes,arrows}
-
-\usetheme{Frankfurt}
-%\usetheme{Warsaw}
-\title[Title of presentation]{Uhrenbaustein\\
-{\small Time&Date and Countdown}
-}
-\author[author name]
-{Tobias F{\"u}lle}
-\institute[Fnord GmbH]{Lehrstuhl f{\"u}r integrierte Systeme}
-\date{Tue - 06/11/12}
-
-
-\begin{document}
-
-%{
-%\usebackgroundtemplate{\includegraphics[width=\paperwidth]{pictures/sample.jpg}}
-%\begin{frame}
-%\thispagestyle{empty}
-%\titlepage
-%\end{frame}
-%%}
-%%
-%\begin{frame}
-%\frametitle{Overview}
-%\tableofcontents
-%\end{frame}
-%
-%\setlength\fboxsep{5pt}
-%\setlength\fboxrule{0pt}
-
-\tikzstyle{state}   = [ rounded rectangle, 
-                        draw, 
-                        text centered, 
-                        minimum height=3em 
-                      ]
-
-
 \section{Time and Date}
 %[fragile]
-\begin{frame}[fragile]{Time and Date components}
+\begin{frame}[fragile]{Time and Date component}
 \begin{verbatim} 
 component time_date is	
  port(
@@ -104,21 +51,28 @@ end component;
 
 \end{tikzpicture}
 \end{frame}
-\tikzstyle{line}    = [ draw, -latex', text centered, text width = 5cm ]
 
 \begin{frame}{Time and Date FSM}
+	\tikzstyle{line}    = [ draw, -latex', align=center, text width = 5cm ]
+
+	\tikzstyle{state}   = [ rounded rectangle,
+	                        draw,
+	                        align=center,
+	                        minimum height=3em
+	                      ]
 	\begin{tikzpicture} [text width=1.3cm,align=flush center,font=\normalsize,auto]
 		%\node[text width=6cm] at (6,1.2) {All transitions occur on CLK$\uparrow$};
 		\node[state] (S0) at (4, -2)  { Display Time };
 		\node[state] (S1) at (12, -2) { Display Time \\ and Date };
 		
-		\path[line] (S0) -- node [right] {mode\_key AND focus} (S1);
+		\path[line] (S0) -- node [above] {mode\_key AND focus} (S1);
 		\path[line]	  (S1) -- node {time is up OR reset} (S0);
 		\path[line]  (2.5, -0.5) -- (S0);
 	\end{tikzpicture}
 \end{frame}
-  
-\begin{frame}[fragile]{Countdown components}
+
+\section{Countdown}
+\begin{frame}[fragile]{Countdown component}
 \begin{verbatim} 
 component countdown is	
  port(
@@ -160,27 +114,28 @@ end component;
 
 \end{tikzpicture}
 \end{frame}  
-\tikzstyle{line}    = [ draw, -latex', text centered, text width = 2cm ]
 
-\begin{frame}{Time and Date FSM}
+\begin{frame}{Countdown FSM}
 	\begin{tikzpicture} [text width=1.3cm,align=flush center,font=\normalsize,auto]
+		\tikzstyle{line}    = [ draw, -latex', align=center, text width = 2cm ]
+		\tikzstyle{state}   = [ rounded rectangle,
+		                        draw,
+		                        align=center,
+		                        minimum height=3em
+		                      ]
 		%\node[text width=6cm] at (6,1.2) {All transitions occur on CLK$\uparrow$};
-		\node[state] (S0) at (4, -4.5)  { Set \tiny{\\ti\_on=1\\char=xx:xx}} ;
-		\node[state] (S1) at (4, -2) { Reset \tiny{\\time=00:04}};
-		\node[state] (S2) at (12, -2) { Start \tiny{\\ti\_on=1\\char=xx:xx}};
-		\node[state] (S3) at (12, -4.5) { Beep \tiny{\\ti\_on=0\\ti\_beep=1\\char=xx:xx}};
-		\node[state] (S4) at (12, 0.5) { Pause \tiny{\\ti\_on=blink\\char=xx:xx}};
+		\node[state] (S0) at (4, -4.5)  { Set   \tiny{\vspace{1em}\\ti\_on=1\\char=xx:xx\\}} ;
+		\node[state] (S1) at (4, -2)    { Reset \tiny{\vspace{1em}\\time=00:04\\}};
+		\node[state] (S2) at (12, -2)   { Start \tiny{\vspace{1em}\\ti\_on=1\\char=xx:xx\\}};
+		\node[state] (S3) at (12, -4.5) { Beep  \tiny{\vspace{1em}\\ti\_on=0\\ti\_beep=1\\char=xx:xx\\}};
+		\node[state] (S4) at (12, 0.5)  { Pause \tiny{\vspace{1em}\\ti\_on=blink\\char=xx:xx\\}};
 		
 		\path[line] (S1) -- (S0);
 		\path[line]	  (S0) -- node {Action\_key AND focus} (S2);
-		\path[line]  (4, 0) node [centered, above] {reset AND focus} -- (S1);
-		\path[line]	  (S2) -- node {Action\_key AND} (S4);
-		\path[line]	  (S4) -- node {focus} (S2);
+		\path[line]  (4, 0) node [align=center, above] {reset} -- (S1);
+		\path[line,]	  (S2) -- node {Action\_key AND focus} (S4);
+		\path[line]	  (S4) -- (S2);
 		\path[line]	  (S2) -- node {reaches zero} (S3);
 		\path[line]	  (S3) -- (S0);
 	\end{tikzpicture}
 \end{frame}
-  
-
-\end{document}
-
