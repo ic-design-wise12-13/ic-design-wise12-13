@@ -190,17 +190,17 @@
  \end{frame}
 \section{mode\_alarm}
   \begin{frame}{mode\_alarm overview}
-    \begin{tikzpicture}
+    \begin{tikzpicture}[align=center,font=\small,node distance=.5cm,auto]
 %  			\draw[red] (-3,3) rectangle (9,-4);
 
     % main modules
-		  \node[rectangle,draw=black,minimum height=1.5cm,minimum width=2.5cm,above right] at (0,2) {Alarm active};
-	    \node[rectangle,draw=black,minimum height=1.5cm,minimum width=2.5cm,above right] at (0,-2) {Alarm time};
-	    \node[rectangle,draw=black,minimum height=1.5cm,minimum width=2.5cm,above right] at (5.25,0) {AlarmOn FSM};
+		  \node[rectangle,draw=black,minimum height=1.5cm,minimum width=2.25cm,above right] at (0.5,1.25) {Alarm active};
+	    \node[rectangle,draw=black,minimum height=1.5cm,minimum width=2.25cm,above right] at (0.5,-2) {Alarm time};
+	    \node[rectangle,draw=black,minimum height=1cm,minimum width=2cm,above right] at (5.25,0) {AlarmOn FSM};
 		  % compare
 		  \draw (3,0) -- (3.5, -.5) -- (3,-1) -- cycle;
       % OR
-	    \node[rectangle,draw=black,minimum height=1cm,minimum width=1cm,above right] at (4,0.25) {OR};
+	    \node[rectangle,draw=black,minimum height=0.5cm,minimum width=1cm,above right] at (4,0.25) {OR};
 
 %  FAIL: Library for logic gates not recognized!
 %    \node[or gate US, draw,logic gate inputs=inini] (A) {;
@@ -210,22 +210,39 @@
 %};
 
       % basic connections
-		  \draw[->] (2.5,2.75)  -- (3.5,2.75)    -- (3.5,1)     -> (4,1);
-		  \draw[->] (2.5,-0.75) -> (3,-0.75);
-      \draw[->] (3.5, -0.5)    -- (3.75,-0.5)    -- (3.75, 0.5) -> (4,0.5);
-      \draw[->] (5, 0.75) -> (5.25, 0.75);
+		  \draw[->] (2.75,2)  -- (3.75,2)    -- (3.75,0.65)     -> (4,0.65);
+		  \draw[->] (2.75,-0.75) -> (3,-0.75);
+      \draw[->] (3.5, -0.5)    -- (3.75,-0.5)    -- (3.75, 0.4) -> (4,0.4);
+      \draw[->] (5, 0.5) -> (5.25, 0.5);
 
       % input
-      \node[above left] at (-.5,0){current\_time};
-	    \draw[red!50!black,line width=2pt,->] (-1, 0)      -- (2.75,0)     -- (2.75, -0.25) -> (3,-0.25);
-      \node[above left] at (-.5,-1){kc\_minus\_imp};
-      \draw[red!50!black,line width=2pt,->] (-1,-1) -- (0,-1);
-      \node[above left] at (-.5,-1.5){kc\_plus\_imp};
-      \draw[red!50!black,line width=2pt,->] (-1,-1.5) -- (0,-1.5);
-      \node[above left] at (-.5, -2){reset};
- 		  \draw[red!50!black,line width=2pt,->] (-1,-2) -- (0,-2);
+      \node[above left] at (.25,2.65){kc\_act\_imp};
+      \draw[red!50!black,line width=2pt,->] (-0.5,2.75) -- (0.5,2.75);
+      \node[above left] at (.25,2.15){key\_focus};
+      \draw[red!50!black,line width=2pt,->] (-0.5,2.25) -- (0.5,2.25);
+     %\node[above left] at (.25, 1.65){key\_focus};
+ 		 %\draw[red!50!black,line width=2pt,->] (-0.5,1.75) -- (0.5,1.75);
+      \node[above left] at (.25, 1.15){reset};
+ 		  \draw[red!50!black,line width=2pt,->] (-0.5,1.25) -- (0.5,1.25);
 
 
+      \node[above left] at (0.25,0){current\_time};
+	    \draw[red!50!black,line width=2pt,->] (-0.5, 0) -- (2.75,0) -- (2.75,-.25) -> (3,-.25);
+      \node[above left] at (.25,-.6){kc\_minus\_imp};
+      \draw[red!50!black,line width=2pt,->] (-0.5,-.5) -- (0.5,-.5);
+      \node[above left] at (.25,-1.1){kc\_plus\_imp};
+      \draw[red!50!black,line width=2pt,->] (-0.5,-1) -- (0.5,-1);
+      \node[above left] at (.25, -1.6){key\_focus};
+ 		  \draw[red!50!black,line width=2pt,->] (-0.5,-1.5) -- (0.5,-1.5);
+      \node[above left] at (.25, -2.1){reset};
+ 		  \draw[red!50!black,line width=2pt,->] (-0.5,-2) -- (0.5,-2);
+
+      % output
+      \node[above left] at (9.5,0.15){al\_on};
+      \draw[blue!50!black,line width=2pt,->] (7.75,0.75) -- (9.5,0.75);
+      \node[above left] at (9.5,0.65){alarm\_on};
+      \draw[blue!50!black,line width=2pt,->] (7.75,0.25) -- (9.5,0.25);
+ 
 
 
 
