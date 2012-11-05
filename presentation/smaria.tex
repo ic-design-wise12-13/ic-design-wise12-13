@@ -191,26 +191,39 @@
 \section{mode\_alarm}
   \begin{frame}{mode\_alarm overview}
     \begin{tikzpicture}
-      % main modules
-		  \node[rectangle,draw=black,minimum height=1.5cm,minimum width=2.75cm,above right] at (0,2) {Alarm active};
-	    \node[rectangle,draw=black,minimum height=1.5cm,minimum width=2.75cm,above right] at (0,-2) {Alarm time};
-	    \node[rectangle,draw=black,minimum height=1.5cm,minimum width=2.75cm,above right] at (7,0) {AlarmOn FSM};
-		  % compare
-		  \draw (4,-.5) -- (4.5, -1) -- (4,-1.5) -- cycle;
-      % OR
-	    \node[rectangle,draw=black,minimum height=1cm,minimum width=1cm,above right] at (5.5,0.25) {OR};
+%  			\draw[red] (-3,3) rectangle (9,-4);
 
+    % main modules
+		  \node[rectangle,draw=black,minimum height=1.5cm,minimum width=2.5cm,above right] at (0,2) {Alarm active};
+	    \node[rectangle,draw=black,minimum height=1.5cm,minimum width=2.5cm,above right] at (0,-2) {Alarm time};
+	    \node[rectangle,draw=black,minimum height=1.5cm,minimum width=2.5cm,above right] at (5.25,0) {AlarmOn FSM};
+		  % compare
+		  \draw (3,0) -- (3.5, -.5) -- (3,-1) -- cycle;
+      % OR
+	    \node[rectangle,draw=black,minimum height=1cm,minimum width=1cm,above right] at (4,0.25) {OR};
+
+%  FAIL: Library for logic gates not recognized!
 %    \node[or gate US, draw,logic gate inputs=inini] (A) {;
 %    \foreach \a in {1,\dots,5}
 %        \draw (A.input \a -| -1,0) -- (A.input \a);
 %        \draw (A.output) -- ([xshift=0.5cm]A.output);\\
 %};
 
-      % switch alarm active
-		  \draw[->] (2.75,2.75)  -- (5,2.75)    -- (5,1)     -> (5.5,1);
-		  \draw[->] (2.75,-1.25) -- (3.5,-1.25) -- (3.5, -1.25) -> (4,-1.25);
-      \draw[->] (-1, 0)      -- (3.5,0)     -- (3.5, -0.75) -> (4,-0.75);
-      \draw[->] (4.5, -1)    -- (5,-1)    -- (5, 0.5) -> (5.5,0.5);
+      % basic connections
+		  \draw[->] (2.5,2.75)  -- (3.5,2.75)    -- (3.5,1)     -> (4,1);
+		  \draw[->] (2.5,-0.75) -> (3,-0.75);
+      \draw[->] (3.5, -0.5)    -- (3.75,-0.5)    -- (3.75, 0.5) -> (4,0.5);
+      \draw[->] (5, 0.75) -> (5.25, 0.75);
+
+      % input
+      \node[above left] at (-.5,0){current\_time};
+	    \draw[red!50!black,line width=2pt,->] (-1, 0)      -- (2.75,0)     -- (2.75, -0.25) -> (3,-0.25);
+      \node[above left] at (-.5,-1){kc\_minus\_imp};
+      \draw[red!50!black,line width=2pt,->] (-1,-1) -- (0,-1);
+      \node[above left] at (-.5,-1.5){kc\_plus\_imp};
+      \draw[red!50!black,line width=2pt,->] (-1,-1.5) -- (0,-1.5);
+      \node[above left] at (-.5, -2){reset};
+ 		  \draw[red!50!black,line width=2pt,->] (-1,-2) -- (0,-2);
 
 
 
@@ -220,7 +233,7 @@
   \end{frame}
 
   \begin{frame}{mode\_alarm FSM:alarm on}
-		\begin{tikzpicture}[text width=1.3cm,align=center,font=\tiny,node distance=.5cm,auto]
+		\begin{tikzpicture}[every state/.style={text width=1.3cm,align=center,node distance=.5cm},font=\tiny,auto]
 		  \node[right,text width=100cm,align=left] at (2,1.5) {All transitions occur on CLK$\uparrow$};
 		  \node[state,                              minimum size=2.3cm](AlarmOnA) { ALARM ON   \\ al\_on = 1 \\ alarm\_on = 1 \\ snooze <= alarm\_time };
 		  \node[state,right=of AlarmOnA,xshift=2cm, minimum size=2.3cm](Snooze)   { SNOOZE     \\ al\_on = 0 \\ alarm\_on = 0 \\ snooze <= current\_time + 5min };
@@ -234,7 +247,7 @@
 		            (AlarmOnB)     edge[bend left]  node {kc\_act\_imp}                 (Snooze)
 		            (AlarmOnB)     edge[bend left]  node {kc\_act\_long}                (AlarmOff)
   	            (AlarmOnB)     edge[bend right] node {>1min}                        (AlarmOff)
-                (Snooze)       edge[bend left]  node {snooze=current\_time}         (AlarmOnB)
+                (Snooze)       edge[bend left]  node {snooze=current\_time}         (AlarmOnB);
 
 
 
