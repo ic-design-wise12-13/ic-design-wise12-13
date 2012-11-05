@@ -13,6 +13,7 @@
 \usepackage{url}
 \usepackage{colortbl}
 \usetikzlibrary{automata,positioning}
+\usetikzlibrary{shapes,arrows}
 
 \usetheme{Frankfurt}
 %\usetheme{Warsaw}
@@ -23,6 +24,7 @@
 {Tobias F{\"u}lle}
 \institute[Fnord GmbH]{Lehrstuhl f{\"u}r integrierte Systeme}
 \date{Tue - 06/11/12}
+
 
 \begin{document}
 
@@ -41,6 +43,13 @@
 %
 %\setlength\fboxsep{5pt}
 %\setlength\fboxrule{0pt}
+
+\tikzstyle{state}   = [ rounded rectangle, 
+                        draw, 
+                        text centered, 
+                        minimum height=3em 
+                      ]
+
 
 \section{Time and Date}
 %[fragile]
@@ -95,16 +104,17 @@ end component;
 
 \end{tikzpicture}
 \end{frame}
+\tikzstyle{line}    = [ draw, -latex', text centered, text width = 5cm ]
 
 \begin{frame}{Time and Date FSM}
-	\begin{tikzpicture}[every state/.style={text width=2cm,align=center},font=\tiny,auto]
-%		\node[text width=4cm] at (4,1.2) {All transitions occur on CLK$\uparrow$};
-		\node[state] (S0) at (14, -2) { Display Time };
-		\node[state] (S1) at (8, -2) { Display Time \\ and Date };
-
-		\path[->] (S0) edge node {mode\_key AND  focus\_on} (S1)
-		          (S1) edge node {time is up OR reset}(S0)
-		          (S0) ++ (120:2) edge (S0);
+	\begin{tikzpicture} [text width=1.3cm,align=flush center,font=\normalsize,auto]
+		%\node[text width=6cm] at (6,1.2) {All transitions occur on CLK$\uparrow$};
+		\node[state] (S0) at (4, -2)  { Display Time };
+		\node[state] (S1) at (12, -2) { Display Time \\ and Date };
+		
+		\path[line] (S0) -- node [right] {mode\_key AND focus} (S1);
+		\path[line]	  (S1) -- node {time is up OR reset} (S0);
+		\path[line]  (2.5, -0.5) -- (S0);
 	\end{tikzpicture}
 \end{frame}
   
@@ -150,6 +160,26 @@ end component;
 
 \end{tikzpicture}
 \end{frame}  
+\tikzstyle{line}    = [ draw, -latex', text centered, text width = 2cm ]
+
+\begin{frame}{Time and Date FSM}
+	\begin{tikzpicture} [text width=1.3cm,align=flush center,font=\normalsize,auto]
+		%\node[text width=6cm] at (6,1.2) {All transitions occur on CLK$\uparrow$};
+		\node[state] (S0) at (4, -4.5)  { Set \tiny{\\ti\_on=1\\char=xx:xx}} ;
+		\node[state] (S1) at (4, -2) { Reset \tiny{\\time=00:04}};
+		\node[state] (S2) at (12, -2) { Start \tiny{\\ti\_on=1\\char=xx:xx}};
+		\node[state] (S3) at (12, -4.5) { Beep \tiny{\\ti\_on=0\\ti\_beep=1\\char=xx:xx}};
+		\node[state] (S4) at (12, 0.5) { Pause \tiny{\\ti\_on=blink\\char=xx:xx}};
+		
+		\path[line] (S1) -- (S0);
+		\path[line]	  (S0) -- node {Action\_key AND focus} (S2);
+		\path[line]  (4, 0) node [centered, above] {reset AND focus} -- (S1);
+		\path[line]	  (S2) -- node {Action\_key AND} (S4);
+		\path[line]	  (S4) -- node {focus} (S2);
+		\path[line]	  (S2) -- node {reaches zero} (S3);
+		\path[line]	  (S3) -- (S0);
+	\end{tikzpicture}
+\end{frame}
   
 
 \end{document}
