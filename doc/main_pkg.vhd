@@ -33,6 +33,7 @@ package main_pkg is
 		month:                unsigned(4 downto 0);
 		year:                 unsigned(7 downto 0);
 		minute:               unsigned(6 downto 0);
+		second:               unsigned(6 downto 0);
 		valid:                std_logic;
 	end record;
 
@@ -44,7 +45,7 @@ package main_pkg is
 	component time_buffer is
 		port(
 			uni:               in  universal_signals;
-			time_in:           in  time_signals; -- input time signal from dcf77_eval
+			time_in:           in  time_signals; -- input time signal from dcf77_eval (second set to 0)
 			time_out:          out time_signals  -- buffered output signal
 		);
 	end component;

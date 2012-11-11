@@ -88,6 +88,20 @@ begin
 		current_time_inc <= current_time;
 
 		for i = 0 to 0 loop -- so we can break out without nesting if statements
+			-- increment 1 second
+			if current_time.second(3 downto 0) /= 9 then
+				current_time_inc.second(3 downto 0) <= current_time.second(3 downto 0) + 1;
+				exit;
+			end if;
+			current_time_inc.minute(3 downto 0) <= x"0";
+
+			-- increment 10 seconds
+			if current_time.second(6 downto 4) /= 5 then
+				current_time_inc.second(6 downto 4) <= current_time.second(6 downto 4) + 1;
+				exit;
+			end if;
+			current_time_inc.second(6 downto 4) <= "000";
+
 			-- increment 1 minute
 			if current_time.minute(3 downto 0) /= 9 then
 				current_time_inc.minute(3 downto 0) <= current_time.minute(3 downto 0) + 1;
