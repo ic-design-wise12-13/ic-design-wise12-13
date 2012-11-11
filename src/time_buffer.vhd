@@ -7,6 +7,9 @@ use work.main_pkg.all;
 
 -- see main_pkg for signal descriptions
 entity time_buffer is
+	generic(
+		clock_divider: natural := 10000
+	);
 	port(
 		uni:               in  universal_signals;
 		time_in:           in  time_signals;
@@ -17,7 +20,7 @@ end entity;
 architecture behavioral of time_buffer is
 	signal current_time: time_signals;
 	signal current_time_inc: time_signals;
-	signal counter: unsigned(19 downto 0); -- to divide the 10 kHz clock to a period of 60 s
+	signal counter: natural range clock_divider - 1 downto 0; -- to divide the 10 kHz clock to a period of 60 s
 
 	signal days_in_month: unsigned(7 downto 0);
 
@@ -26,15 +29,15 @@ begin
 	process(uni.clk)
 	begin
 		if rising_edge(uni.clk) then
-			counter <= to_unsigned(0, counter'length);
+			counter <= 0;
 
 			if uni.reset = '1' then
 				-- counter already reset by default assignment
-				-- TODO: what should be the starting time of our clock?
+				current_time <= ("110", "000001", "000000", "00001", x"00", "0000000", "0000000", '0'); -- Sat January 1, 2000, 00:00:00, invalid
 			elsif time_in.valid = '1' then
 				-- register new time information and restart the minute counter
 				current_time <= time_in;
-			elsif counter = 10000 * 60 - 1 then
+			elsif counter = clock_divider - 1 then
 				-- minute counter expired: increment time
 				current_time <= current_time_inc;
 			else
@@ -43,10 +46,14 @@ begin
 		end if;
 	end process;
 
+	time_out <= current_time;
+
 	-- process to compute days_in_month
 	process(current_time)
+		variable month: unsigned(7 downto 0);
 	begin
-		case "000" & current_time.month is
+		month := "000" & current_time.month;
+		case month is
 			when x"01" => days_in_month <= x"31";
 			when x"03" => days_in_month <= x"31";
 			when x"04" => days_in_month <= x"30";
@@ -70,13 +77,6 @@ begin
 				elsif current_time.year(3 downto 0) = x"0" or current_time.year(3 downto 0) = x"4" or current_time.year(3 downto 0) = x"8" then
 					days_in_month <= x"29";
 				end if;
-
-				-- 00 is not a leap year (at least 2000 has already passed, and
-				-- 2100, 2200 and 2300 are not leap years, so we'll be correct
-				-- until February 2400)
-				if current_time.year = x"00" then
-					days_in_month <= x"28";
-				end if;
 			when others => days_in_month <= "00UUUUUU"; -- should never happen
 		end case;
 	end process;
@@ -87,13 +87,13 @@ begin
 		-- don't change anything by default
 		current_time_inc <= current_time;
 
-		for i = 0 to 0 loop -- so we can break out without nesting if statements
+		for i in 0 to 0 loop -- so we can break out without nesting if statements
 			-- increment 1 second
 			if current_time.second(3 downto 0) /= 9 then
 				current_time_inc.second(3 downto 0) <= current_time.second(3 downto 0) + 1;
 				exit;
 			end if;
-			current_time_inc.minute(3 downto 0) <= x"0";
+			current_time_inc.second(3 downto 0) <= x"0";
 
 			-- increment 10 seconds
 			if current_time.second(6 downto 4) /= 5 then

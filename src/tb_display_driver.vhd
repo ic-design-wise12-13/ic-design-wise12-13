@@ -77,7 +77,7 @@ begin
 
 	process(d_rw)
 	begin
-		assert d_rw = '0' report "only write accesses are supported" severity error;
+		assert d_rw /= '1' report "only write accesses are supported" severity error;
 	end process;
 
 	process(en_toggle)
@@ -185,7 +185,7 @@ begin
 		wait for 100 us;
 		uni.reset <= '0';
 
-		wait for 60 min;
+		wait;
 	end process;
 
 	process(display_content_in)

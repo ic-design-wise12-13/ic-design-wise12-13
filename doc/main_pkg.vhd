@@ -44,6 +44,9 @@ package main_pkg is
 
 	-- component that maintains its own clock and synchronizes it to the DCT signal if it's valid
 	component time_buffer is
+		generic(
+			clock_divider: natural := 10000 -- number of clock ticks in one second
+		);
 		port(
 			uni:               in  universal_signals;
 			time_in:           in  time_signals; -- input time signal from dcf77_eval (second set to 0)
