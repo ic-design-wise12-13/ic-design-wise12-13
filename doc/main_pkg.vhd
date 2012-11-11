@@ -38,6 +38,7 @@ package main_pkg is
 	end record;
 
 	-- types to define arrays of characters
+	type character_array_1d is array(natural range <>) of unsigned(7 downto 0);
 	type character_array_2d is array(natural range <>, natural range <>) of unsigned(7 downto 0);
 	type character_array_3d is array(natural range <>, natural range <>, natural range <>) of unsigned(7 downto 0);
 
@@ -58,7 +59,7 @@ package main_pkg is
 			d_en:              out std_logic;
 			d_rw:              out std_logic;
 			d_rs:              out std_logic;
-			d_data:            out std_logic_vector(7 downto 0)
+			d_data:            out unsigned(7 downto 0)
 		);
 	end component;
 
@@ -72,8 +73,8 @@ package main_pkg is
 
 			alarm_on:          in  std_logic; -- whether the alarm is ringing: force the alarm module to have keyboard focus
 
-			keyboard_focus:    out std_logic_vector(num_modes - 1 downto 0); -- signal to each module whether it has keyboard focus
-			visible:           out std_logic_vector(num_modes - 1 downto 0)  -- control signal to display_mux
+			keyboard_focus:    out unsigned(num_modes - 1 downto 0); -- signal to each module whether it has keyboard focus
+			visible:           out unsigned(num_modes - 1 downto 0)  -- control signal to display_mux
 		);
 	end component;
 
@@ -103,7 +104,7 @@ package main_pkg is
 		);
 		port(
 			uni:               in  universal_signals;
-			visible:           in  std_logic_vector(num_modes - 1 downto 0);
+			visible:           in  unsigned(num_modes - 1 downto 0);
 			module_characters: in character_array_3d(num_modes - 1 downto 0, 3 downto 0, 19 downto 0);
 			characters:        out character_array_2d(3 downto 0, 19 downto 0)
 		);
