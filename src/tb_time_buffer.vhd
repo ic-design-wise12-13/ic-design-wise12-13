@@ -12,7 +12,7 @@ entity tb_time_buffer is
 end entity;
 
 architecture behavioral of tb_time_buffer is
-	constant clock_divider: natural := 2;
+	constant clock_divider: natural := 1;
 
 	signal uni:      universal_signals;
 	signal time_in:  time_signals;
@@ -32,6 +32,38 @@ architecture behavioral of tb_time_buffer is
 		ret.valid     := input(52);
 		return ret;
 	end function;
+
+	-- print out time_signals as "VWYY-MM-DDThh:mm:ss" (V = valid, W = dayofweek, T = literal T)
+	procedure print_time_signals(input: in time_signals) is
+		variable my_line: line;
+	begin
+		if input.valid = '1' then
+			write(my_line, 'V');
+		else
+			write(my_line, ' ');
+		end if;
+
+		write(my_line, to_integer(input.dayofweek));
+		write(my_line, '=');
+		write(my_line, to_integer(input.year(7 downto 4)));
+		write(my_line, to_integer(input.year(3 downto 0)));
+		write(my_line, '-');
+		write(my_line, to_integer(input.month(4 downto 4)));
+		write(my_line, to_integer(input.month(3 downto 0)));
+		write(my_line, '-');
+		write(my_line, to_integer(input.day(5 downto 4)));
+		write(my_line, to_integer(input.day(3 downto 0)));
+		write(my_line, 'T');
+		write(my_line, to_integer(input.hour(5 downto 4)));
+		write(my_line, to_integer(input.hour(3 downto 0)));
+		write(my_line, ':');
+		write(my_line, to_integer(input.minute(6 downto 4)));
+		write(my_line, to_integer(input.minute(3 downto 0)));
+		write(my_line, ':');
+		write(my_line, to_integer(input.second(6 downto 4)));
+		write(my_line, to_integer(input.second(3 downto 0)));
+		writeline(output, my_line);
+	end procedure;
 
 begin
 	time_buffer_inst: time_buffer generic map(
@@ -57,38 +89,23 @@ begin
 		uni.reset <= '1';
 		wait for 100 us;
 		uni.reset <= '0';
+		wait for 100 us;
 
-		wait;
+		while true loop
+			time_in <= time_out;
+			time_in.valid <= '1';
+			time_in.second <= "1011001";
+			time_in.minute <= "1011001";
+			time_in.hour <= "100011";
+			wait for 100 us;
+			time_in.valid <= '0';
+			wait for 100 us;
+			print_time_signals(time_out);
+		end loop;
 	end process;
 
 	process(time_out)
-		variable my_line: line;
 	begin
-		if time_out.valid = '1' then
-			write(my_line, 'V');
-		else
-			write(my_line, ' ');
-		end if;
-
-		write(my_line, to_integer(time_out.dayofweek));
-		write(my_line, '=');
-		write(my_line, to_integer(time_out.year(7 downto 4)));
-		write(my_line, to_integer(time_out.year(3 downto 0)));
-		write(my_line, '-');
-		write(my_line, to_integer(time_out.month(4 downto 4)));
-		write(my_line, to_integer(time_out.month(3 downto 0)));
-		write(my_line, '-');
-		write(my_line, to_integer(time_out.day(5 downto 4)));
-		write(my_line, to_integer(time_out.day(3 downto 0)));
-		write(my_line, 'T');
-		write(my_line, to_integer(time_out.hour(5 downto 4)));
-		write(my_line, to_integer(time_out.hour(3 downto 0)));
-		write(my_line, ':');
-		write(my_line, to_integer(time_out.minute(6 downto 4)));
-		write(my_line, to_integer(time_out.minute(3 downto 0)));
-		write(my_line, ':');
-		write(my_line, to_integer(time_out.second(6 downto 4)));
-		write(my_line, to_integer(time_out.second(3 downto 0)));
-		writeline(output, my_line);
+		-- print_time_signals(time_out);
 	end process;
 end architecture;

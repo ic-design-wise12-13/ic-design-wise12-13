@@ -102,6 +102,8 @@ begin
 			end if;
 			current_time_inc.second(6 downto 4) <= "000";
 
+			current_time_inc.valid <= '0';
+
 			-- increment 1 minute
 			if current_time.minute(3 downto 0) /= 9 then
 				current_time_inc.minute(3 downto 0) <= current_time.minute(3 downto 0) + 1;
@@ -151,18 +153,18 @@ begin
 
 			current_time_inc.day <= "000001";
 
-			-- increment 1 month
+			-- increment month
 			if current_time.month(3 downto 0) /= x"9" then
 				current_time_inc.month(3 downto 0) <= current_time.month(3 downto 0) + 1;
-				exit;
+			else
+				current_time_inc.month(3 downto 0) <= x"0";
+				current_time_inc.month(4 downto 4) <= current_time.month(4 downto 4) + 1;
 			end if;
-			current_time_inc.month(3 downto 0) <= x"0";
 
-			-- increment 10 months
-			current_time_inc.month(4 downto 4) <= current_time.month(4 downto 4) + 1;
 			if "000" & current_time.month /= x"12" then
 				exit;
 			end if;
+
 			current_time_inc.month <= "00001";
 
 			-- increment 1 year
