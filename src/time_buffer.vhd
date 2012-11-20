@@ -77,7 +77,7 @@ begin
 				elsif current_time.year(3 downto 0) = x"0" or current_time.year(3 downto 0) = x"4" or current_time.year(3 downto 0) = x"8" then
 					days_in_month <= x"29";
 				end if;
-			when others => days_in_month <= "00UUUUUU"; -- should never happen
+			when others => days_in_month <= "00XXXXXX"; -- should never happen
 		end case;
 	end process;
 

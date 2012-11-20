@@ -70,10 +70,10 @@ begin
 				d_rs <= '0';
 				d_data <= x"38";
 
-				counter <= "UUUUUU";
+				counter <= "XXXXXX";
 
 				for i in 0 to 39 loop
-					sr(i) <= "UUUUUUUU";
+					sr(i) <= "XXXXXXXX";
 				end loop;
 			elsif tx_done = '1' then
 				if refresh_state = REFRESH_INIT_1 then
@@ -82,10 +82,10 @@ begin
 					d_rs <= '0';
 					d_data <= x"0C";
 
-					counter <= "UUUUUU";
+					counter <= "XXXXXX";
 
 					for i in 0 to 39 loop
-						sr(i) <= "UUUUUUUU";
+						sr(i) <= "XXXXXXXX";
 					end loop;
 				elsif refresh_state = REFRESH_INIT_2 or (refresh_state = REFRESH_DATA and counter = 0) then
 					refresh_state <= REFRESH_ADDRESS;
@@ -111,7 +111,7 @@ begin
 					for i in 0 to 38 loop
 						sr(i) <= sr(i + 1);
 					end loop;
-					sr(39) <= "UUUUUUUU";
+					sr(39) <= "XXXXXXXX";
 
 					d_rs <= '1';
 					d_data <= sr(0);
