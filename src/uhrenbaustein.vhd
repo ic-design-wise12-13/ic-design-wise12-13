@@ -26,3 +26,21 @@ entity uhrenbaustein is
     d_data                    :out std_logic_vector(7 downto 0)
   );
 end uhrenbaustein;
+
+architecture behavioral of uhrenbaustein is
+
+component mode_alarm
+  port(
+    uni                       :in universal_signals;
+    key                       :in keypad_signals;
+    ctime                     :in time_signals;
+    keyboard_focus            :in std_logic(3 downto 0);
+    characters                :out character_array_3d(2 downto 0,3 downto 0, 19 downto 0);
+    alarm_active,
+    alarm_on, al_on           :out std_logic;
+  );
+
+
+
+
+end component;
