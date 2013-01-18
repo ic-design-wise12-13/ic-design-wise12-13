@@ -37,10 +37,24 @@ component mode_alarm
     keyboard_focus            :in std_logic(3 downto 0);
     characters                :out character_array_3d(2 downto 0,3 downto 0, 19 downto 0);
     alarm_active,
-    alarm_on, al_on           :out std_logic;
+    alarm_on, al_on           :out std_logic
   );
+end component;
 
+component mode_fsm is
+  port(
+    uni                       :in universal_signals;
+    keys                      :in keypad_signals;
+    alarm_on                  :in std_logic;
+    keyboard_focus            :out std_logic_vector(num_modes - 1 downto 0);
+    visible                   :out std_logic_vector(num_modes - 1 downto 0)
+  );
+end component;
 
-
-
+component mux is
+  port(
+    visible                   :in unsigned (3 downto 0);
+    input                     :in character_array_id (3 downto 0);
+    input                     :out unsigned (7 downto 0)
+  );
 end component;
