@@ -30,26 +30,27 @@ end uhrenbaustein;
 
 architecture behavioral of uhrenbaustein is
 
-signal uni              :universal_signals;
-signal keys             :keypad_signals;
-signal ctime            :time_signals;
+signal uni                    :universal_signals;
+signal keys                   :keypad_signals;
+signal ctime                  :time_signals;
 
-signal alarm_active     :std_logic;
-signal keyboard_focus   :std_logic_vector( (num_modes-1) downto 0);
-signal visible          :std_logic_vector( (num_modes-1) downto 0);
-signal all_char         :character_array_3d( (num_modes-1) downto 0, 3 downto 0, 7 downto 0); 
-signal time_char        :character_array_2d( 3 downto 0, 19 downto 0);
-signal m_countdown_char :character_array_2d( 3 downto 0, 19 downto 0);
-signal m_alarm_char     :character_array_2d( 3 downto 0, 19 downto 0);
-signal m_countdown_char :character_array_2d( 3 downto 0, 19 downto 0);
-signal display_char     :character_array_2d( 3 downto 0, 19 downto 0);
+signal alarm_active           :std_logic;
+signal visible                :std_logic_vector( (num_modes-1) downto 0);
+signal all_char               :character_array_3d( (num_modes-1) downto 0, 3 downto 0, 7 downto 0); 
+signal time_char              :character_array_2d( 3 downto 0, 19 downto 0);
+signal m_date_char            :character_array_2d( 3 downto 0, 19 downto 0);
+signal m_alarm_char           :character_array_2d( 3 downto 0, 19 downto 0);
+signal m_countdown_char       :character_array_2d( 3 downto 0, 19 downto 0);
+signal display_char           :character_array_2d( 3 downto 0, 19 downto 0);
+signal keyboard_focus         :unsigned( (num_modes-1) downto 0);
+
 
 begin
 su_on <= '0';    -- set unused variable to 0
 
 all_char(0, 3 downto 0, 19 downto 0) <= m_countdown_char;  -- put display outputs together
 all_char(1, 3 downto 0, 19 downto 0) <= m_alarm_char;
-all_char(2, 3 downto 0, 19 downto 0) <= m_countdown_char;
+all_char(2, 3 downto 0, 19 downto 0) <= m_date_char;
 all_char(3, 3 downto 0, 19 downto 0) <= time_char;
 
 
@@ -96,8 +97,8 @@ mode_alarm_inst: mode_alarm
     uni => uni,
     key => key,
     ctime => ctime,
-    keyboard_focus => keyboard_focus,
-    characters => m_countdown_char,
+    keyboard_focus => keyboard_focus(1),
+    characters => m_alarm_char,
     alarm_active => alarm_active,
     alarm_on => alarm_on,
     al_on => al_on
@@ -107,7 +108,7 @@ mode_countdown_inst: mode_countdown
   port map(
     uni => uni,
     keys => keys,
-    keyboard_focus => keyboard_focus,
+    keyboard_focus => keyboard_focus(0),
     characters => m_countdown_char,
     ti_on => ti_on,
     ti_beep => ti_beep
