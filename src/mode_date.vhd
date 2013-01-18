@@ -13,8 +13,7 @@ entity mode_date is
 		uni:               in  universal_signals;
 		current_time:      in  time_signals;
 		
-		characters:        out character_array_2d(3 downto 0, 19 downto 0);
-		sdow:	 out string(1 to 3)
+		characters:        out character_array_2d(3 downto 0, 19 downto 0)
       );
 end Date;
 
@@ -27,8 +26,6 @@ architecture behavioral of mode_date is
 	
 
 begin
-
-sdow <= ndow;
 
 -- constant assignment of character output:
 char(1 to 80) <= "                                               Date:                    " & '/' & "  " & '/' & "    ";
