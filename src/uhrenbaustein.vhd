@@ -85,7 +85,7 @@ dcf_time.hour <= de_dcf_hour;
 dcf_time.month <= de_dcf_month;
 dcf_time.year <= de_dcf_year;
 dcf_time.minute <= de_dcf_minute;
-dcf_time.second <= de_dcf_second;
+dcf_time.second <= "0000000";
 dcf_time.valid <= de_dcf_set;
 
 

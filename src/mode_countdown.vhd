@@ -123,7 +123,6 @@ end process;
 
 --synchron control and counter
 process(uni.clk) 
-variable count : integer range 0 to 6000 := 0;
 begin
 	if(rising_edge(uni.clk)) then
 	
@@ -134,16 +133,16 @@ begin
 			hour(1) <= 0;
 			hour(0) <= 0;
 			current_state <= set;
-			count := 0;
+			counter <= 0;
 			inithour(1) <= 0;
 			inithour(0) <= 0;
 			initmin(1) <= 0;
 			initmin(0) <= 4;
 		else	
 			if (cnt_reset = '1') then 
-				count := 0;
+				counter <= 0;
 			else
-				count := count + 1;
+				counter <= counter + 1;
 			end if;
 			current_state <= next_state;
 			state <= nstate;
@@ -157,7 +156,6 @@ begin
 			initmin <= nimin;
 		end if;
 	end if;
-	counter <= count;
 end process;
 
 --next state and output
