@@ -1,6 +1,6 @@
 -- Project: Uhrenbaustein
 -- Module: Countdown
--- Author: Tobias Fülle
+-- Author: Tobias Flle
 -- Date:   14/11/2012
 
 library IEEE;
@@ -14,8 +14,8 @@ entity mode_countdown is
       port(
 		uni:               in  universal_signals;
 		keys:              in  keypad_signals;
-		keyboard_focus:    in  std_logic_vector (3 downto 0); 
-		
+		keyboard_focus:    in  std_logic;
+
 		characters:        out character_array_2d(3 downto 0, 19 downto 0);		
 		ti_on :		   	 out std_logic;
 		ti_beep:           out std_logic
@@ -31,7 +31,8 @@ architecture behavioral of mode_countdown is
 	signal current_state, next_state : timer;
 	signal char : string (1 to 80);
 	signal state, nstate : string (3 downto 1);
-	signal nhour, nmin,hour,min, inithour, initmin, nihour, nimin : int_array;  
+	signal min1, min0, hour0, hour1 : unsigned(7 downto 0);
+	signal nhour, nmin, inithour, initmin, hour, min, nihour, nimin : int_array;  
 
 -- internal function for plus operation
 function plus(m,h: in int_array) return int_array3 is
@@ -98,32 +99,26 @@ end function;
 begin
 
 -- constant assignment of character output:
-char(1 to 80) <= "                                               Timer:                " & ':' & "          ";
+char(1 to 80) <=  "                    "
+					&	"                    "
+					&  "       Timer:       "
+					&	"         :          ";
 
 -- assignment of 2d character-array output
-process(char,state, hour, min)
+process(char,state, hour1, hour0, min1, min0)
 begin
 		for row in 0 to 3 loop
-			for col in 0 to 19 loop
-				if(row = 3 AND col = 8) then
-					characters(row,col) <= to_unsigned(min(1),8);
-				elsif(row = 3 AND col = 9) then					
-					characters(row,col) <= to_unsigned(min(0),8);
-				elsif(row = 3 AND col = 11) then					
-					characters(row,col) <= to_unsigned(hour(1),8);
-				elsif(row = 3 AND col = 12) then					
-					characters(row,col) <= to_unsigned(hour(0),8);
-				elsif(row = 3 AND col = 15) then					
-					characters(row,col) <= to_unsigned(character'pos(state(3)),8);
-				elsif(row = 3 AND col = 16) then					
-					characters(row,col) <= to_unsigned(character'pos(state(2)),8);
-				elsif(row = 3 AND col = 17) then					
-					characters(row,col) <= to_unsigned(character'pos(state(1)),8);
-				else
-					characters(row, col) <= to_unsigned(character'pos(char(20*row + col + 1)), 8);
-				end if;
+			for col in 0 to 19 loop				
+				characters(row, col) <= to_unsigned(character'pos(char(20*row + col + 1)), 8);
 			end loop;
 		end loop;
+		characters(3,7) <= min1;
+		characters(3,8) <= min0;	
+		characters(3,10) <= hour1;	
+		characters(3,11) <= hour0;	
+		characters(3,14) <= to_unsigned(character'pos(state(3)),8);
+		characters(3,15) <= to_unsigned(character'pos(state(2)),8);		
+		characters(3,16) <= to_unsigned(character'pos(state(1)),8);
 end process;
 
 --synchron control and counter
@@ -134,10 +129,10 @@ begin
 	
  		if(uni.reset = '1') then 
 			state <= "Off";
+			min(0) <= 4;
+			min(1) <= 0;
 			hour(1) <= 0;
 			hour(0) <= 0;
-			min(1)  <= 0;
-			min(0)  <= 4;
 			current_state <= set;
 			count := 0;
 			inithour(1) <= 0;
@@ -152,8 +147,12 @@ begin
 			end if;
 			current_state <= next_state;
 			state <= nstate;
-			hour <= nhour;			
+			hour <= nhour;
 			min <= nmin;
+			hour1 <= "0011" & to_unsigned(hour(1),4);	
+			hour0 <= "0011" & to_unsigned(hour(0),4);
+			min1 <= "0011" & to_unsigned(min(1),4);
+			min0 <= "0011" & to_unsigned(min(0),4);
 			inithour <= nihour;
 			initmin <= nimin;
 		end if;
@@ -162,7 +161,7 @@ begin
 end process;
 
 --next state and output
-process(current_state,next_state,keyboard_focus,keys.kc_act_imp,keys.kc_plus_imp,keys.kc_minus_imp, min, hour, counter, initmin, inithour)
+process(current_state,next_state,keyboard_focus,keys.kc_act_imp,keys.kc_plus_imp,keys.kc_minus_imp, min, hour, nmin, nhour, counter, initmin, inithour)
 	variable temp : int_array3;
 begin
 case current_state is
@@ -170,7 +169,7 @@ case current_state is
 		ti_on <= '0';
 		ti_beep <= '0';
 		nstate <= "Off";
-		if(keyboard_focus = "0001" AND keys.kc_act_imp = '1') then 
+		if(keyboard_focus = '1' AND keys.kc_act_imp = '1') then 
 			nimin <= min;
 			nihour <= hour;
 			next_state <= start;				
@@ -180,13 +179,13 @@ case current_state is
 			next_state <= current_state;
 		end if;
 		cnt_reset <= '0';
-		if (keyboard_focus = "0001" AND keys.kc_plus_imp = '1') then 
+		if (keyboard_focus = '1' AND keys.kc_plus_imp = '1') then 
 			temp := plus(min, hour);
 			nmin(1) <= temp(1);
 			nmin(0) <= temp(0);
 			nhour(1) <= temp(3);
 			nhour(0) <= temp(2);		
-		elsif (keyboard_focus = "0001" AND keys.kc_minus_imp = '1') then 
+		elsif (keyboard_focus = '1' AND keys.kc_minus_imp = '1') then 
 			temp := minus(min, hour);
 			nmin(1) <= temp(1);
 			nmin(0) <= temp(0);
@@ -201,7 +200,7 @@ case current_state is
 		ti_on <= '1';
 		ti_beep <= '0';
 		nstate <= "On ";		
-		if (keyboard_focus = "0001" AND keys.kc_act_imp = '1') then 
+		if (keyboard_focus = '1' AND keys.kc_act_imp = '1') then 
 			next_state <= pause;			
 		elsif (hour(1) = 0 AND hour(0) = 0 AND min(1) = 0 and min(0) = 0) then			
 			next_state <= beep;
@@ -235,7 +234,7 @@ case current_state is
 			ti_on <= '0';
 			cnt_reset <= '1';
 		end if;	
-		if (keyboard_focus = "0001" AND keys.kc_act_imp = '1') then 
+		if (keyboard_focus = '1' AND keys.kc_act_imp = '1') then 
 			next_state <= start;
 		else
 			next_state <= current_state;
