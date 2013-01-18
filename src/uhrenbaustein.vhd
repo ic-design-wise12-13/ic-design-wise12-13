@@ -33,29 +33,108 @@ architecture behavioral of uhrenbaustein is
 signal uni              :universal_signals;
 signal keys             :keypad_signals;
 signal ctime            :time_signals;
-signal char1            :character_array_1d; -- ??
-          
 
 signal alarm_active     :std_logic;
 signal keyboard_focus   :std_logic_vector( (num_modes-1) downto 0);
 signal visible          :std_logic_vector( (num_modes-1) downto 0);
-signal sdow             :string(1 to 3);   --??
-
-
+signal all_char         :character_array_3d( (num_modes-1) downto 0, 3 downto 0, 7 downto 0); 
+signal time_char        :character_array_2d( 3 downto 0, 19 downto 0);
+signal m_countdown_char :character_array_2d( 3 downto 0, 19 downto 0);
+signal m_alarm_char     :character_array_2d( 3 downto 0, 19 downto 0);
+signal m_countdown_char :character_array_2d( 3 downto 0, 19 downto 0);
+signal display_char     :character_array_2d( 3 downto 0, 19 downto 0);
 
 begin
-su_on <= '0';
+su_on <= '0';    -- set unused variable to 0
+
+all_char(0, 3 downto 0, 19 downto 0) <= m_countdown_char;  -- put display outputs together
+all_char(1, 3 downto 0, 19 downto 0) <= m_alarm_char;
+all_char(2, 3 downto 0, 19 downto 0) <= m_countdown_char;
+all_char(3, 3 downto 0, 19 downto 0) <= time_char;
+
 
 uni.clk <= clk;
 uni.reset <= reset;
+uni.enable_1 <= enable_1;
+uni.enable_10 <= enable_10;
+uni.enable_50 <= enable_50;
+uni.enable_100 <= enable_100;
 
+keys.kc_up_dn <= kc_up_dn;
+keys.kc_enable <= kc_enable;
+keys.kc_act_long <= kc_act_long;
+keys.kc_plus_imp <= kc_plus_imp;
+keys.kc_minus_imp <= kc_minus_imp;
+keys.kc_act_imp <= kc_act_imp;
+keys.kc_mode_imp <= kc_mode_imp;
+
+
+
+
+display_driver_inst: display_driver
+  port map(
+    -- name in modul  => name here 
+    uni => uni,
+    characters => display_char,
+    d_en => d_en,
+    d_rw => d_rw,
+    d_rs => d_rs,
+    d_data => d_data
+ );
+
+display_mux_inst: display_mux
+  port map(
+    uni => uni,
+    visible => visible,
+    module_characters => all_char,
+    characters => display_char,
+ );
 
 
 mode_alarm_inst: mode_alarm
   port map(
     uni => uni,
     key => key,
+    ctime => ctime,
+    keyboard_focus => keyboard_focus,
+    characters => m_countdown_char,
+    alarm_active => alarm_active,
+    alarm_on => alarm_on,
+    al_on => al_on
  );
+
+mode_countdown_inst: mode_countdown
+  port map(
+    uni => uni,
+    keys => keys,
+    keyboard_focus => keyboard_focus,
+    characters => m_countdown_char,
+    ti_on => ti_on,
+    ti_beep => ti_beep
+ );
+
+mode_date_inst: mode_date
+  port map(
+    uni => uni,
+    current_time => ctime,
+    characters => m_date_char
+ );
+
+mode_fms_inst: mode_fsm
+  port map(
+    uni => uni,
+    keys => keys,
+    alarm_on => alarm_on,
+    keyboard_focus => keyboard_focus,
+    visible => visible
+ );
+
+mode_time_inst: mode_time
+  port map(
+    uni => uni,
+    current_time => ctime,
+    characters => time_char
+  );
 
 
 end behavioral;
