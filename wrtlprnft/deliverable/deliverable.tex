@@ -288,6 +288,51 @@ invalid.
 
 \subsection{Implementation}
 
+\begin{figure}
+	\begin{center}
+		\begin{tikzpicture}
+			\node[rectangle,draw=black,minimum height=0.75cm,minimum width=4cm,above right] at (0,-1) {+ 1 s, valid <= 0};
+			\node[rectangle,draw=black,minimum height=2.75cm,minimum width=1cm,above right] at (2,-4) {};
+			\node[rectangle,draw=black,minimum height=0.75cm,minimum width=1cm,above right] at (0,-3.5) {$\geq 1$};
+			\node[rectangle,draw=black,minimum height=0.75cm,minimum width=1cm,above right] at (-.25,-5.5) {$\geq 1$};
+			\node[rectangle,draw=black,minimum height=0.75cm,minimum width=2.25cm,above right] at (1,-5.5) {counter};
+			\node[rectangle,draw=black,minimum height=0.75cm,minimum width=1.75cm,above right] at (3.5,-5.5) {= 10000};
+
+			\draw (.75,-1.25) -- (1.25,-1.50) -- (1.25,-2.25) -- (.75,-2.50) -- cycle;
+
+			% time signals
+			\draw[line width=2pt,->] (0,-0.625) -- (-.25,-0.625) -- (-.25,-1.666667) -> (.75,-1.666667) node[right,black] {0};
+			\draw[line width=2pt,->] (-1,-2.083333) node[left,black] {time\_in} -> (.75,-2.083333) node[right,black] {1};
+			\draw[line width=2pt,->] (1.25,-1.875) -> (2,-1.875) node[right,black] {D};
+			\draw[line width=2pt,->] (4.25,-1.875) -- (6,-1.875) node[right,black] {time\_out};
+			\draw[line width=2pt,->] (3,-1.875) node[left,black] {Q} -- (4.25,-1.875) -- (4.25,-.625) -> (4,-.625);
+
+			% OR gate outputs
+			\draw[->] (1,-3.125) -> (2,-3.125) node[right] {E};
+			\draw[->] (1.5,-3.125) node[circ] {} -- (1.5,-3.75) -- (-.5,-3.75) -- (-.5,-5) -> (-.25,-5);
+			\draw[->] (.75,-5.125) -> (1,-5.125) node[right] {R};
+			\draw[->] (-.75,-4.25) node[circ] {} -- (-.75,-5.25) -> (-.25,-5.25);
+
+			% OR gate / MUX inputs
+			\draw[->] (-.25,-2.083333) node[circ] {} -- (-.25,-3) -> (0,-3);
+			\draw[->] (-.25,-2.625) node[circ] {} -- (1,-2.625) -> (1,-2.375);
+			\draw[->] (5.25,-5.125) -- (5.5,-5.125) -- (5.5,-4.5) -- (-.25,-4.5) -- (-.25,-3.25) -- (0,-3.25);
+
+			% counter value
+			\draw[->,line width=2pt] (3.25,-5.125) -> (3.5,-5.125);
+
+			% clock and reset lines
+			\draw[white!50!black,line width=2pt] (-1,-4.25) node[left,black] {uni} -- (3.25,-4.25);
+			\draw[->] (2.333333,-4.25) node[circ] {} -- (2.333333,-4) node[above] {R};
+			\draw[->] (2.666667,-4.25) node[circ] {} -- (2.666667,-4);
+			\draw (2.666667,-4) +(0.173205,0) -- +(0,.2) -- +(-0.173205,0);
+			\draw (3,-4.75) +(0.173205,0) -- +(0,-.2) -- +(-0.173205,0);
+
+		\end{tikzpicture}
+	\end{center}
+	\caption{Internal implementation of the time buffer module}
+\end{figure}
+
 A simple asynchronous ripple carry adder is used to compute the value of the
 currently stored time plus one second. Some simple logic is used to generate
 carry/reset signals at the borders between BCD digits (for example, both digits
