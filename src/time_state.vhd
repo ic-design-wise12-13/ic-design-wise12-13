@@ -1,6 +1,6 @@
 -- Project: Uhrenbaustein
 -- Module: Time_State
--- Author: Tobias Fülle
+-- Author: Tobias Flle
 -- Date:   14/11/2012
 
 library IEEE;
@@ -12,51 +12,79 @@ use work.main_pkg.all;
 entity Time_State is
       port(
 		uni:               in  universal_signals;
---		keys:              in  keypad_signals;
 		current_time:      in  time_signals;
---		keyboard_focus:    in  std_logic (3 downto 0);  no need of keys and keyboard_focus
-
+		
 		characters:        out character_array_2d(3 downto 0, 19 downto 0)
-
       );
 end Time_State;
 
 architecture Behavioral of Time_State is
-	type character_array_1d is array(natural range <>) of unsigned(7 downto 0);
+	signal char : string(1 to 80);
+	signal ndcf, dcf : string(1 to 3);
+	signal hour1, hour2, mindelay, min1, min2, sec1, sec2 : unsigned(7 downto 0);
 begin
 
+-- constant assignment of character output:
+char(1 to 80) <= "       Time:        A      " & ':' & "  " & ':' & "        S                                        ";
 
-process(uni.clk) -- idea to declare variables in the process to get the current value immediately
-	variable sec, min, hour: character_array_1d(1 downto 0);
-	variable DCL : character_array_1d(2 downto 0);
+process(char, hour1, hour2, min1, min2, sec1, sec2, dcf)
 begin
-	if(rising_edge(uni.clk)) then
+		for row in 0 to 3 loop
+			for col in 0 to 19 loop
+				if(row = 1 AND col = 5) then
+					characters(row,col) <= hour1; 
+				elsif(row = 1 AND col = 6) then					
+					characters(row,col) <= hour2;
+				elsif(row = 1 AND col = 8) then					
+					characters(row,col) <= min1;
+				elsif(row = 1 AND col = 9) then					
+					characters(row,col) <= min2;
+				elsif(row = 1 AND col = 11) then					
+					characters(row,col) <= sec1;
+				elsif(row = 1 AND col = 12) then					
+					characters(row,col) <= sec2;
+				elsif(row = 1 AND col = 15) then					
+					characters(row,col) <= to_unsigned(character'pos(dcf(1)), 8);
+				elsif(row = 1 AND col = 16) then					
+					characters(row,col) <= to_unsigned(character'pos(dcf(2)), 8);
+				elsif(row = 1 AND col = 17) then					
+					characters(row,col) <= to_unsigned(character'pos(dcf(3)), 8);
+				else
+					characters(row, col) <= to_unsigned(character'pos(char(20*row + col + 1)), 8);
+				end if;
+			end loop;
+		end loop;
+end process;
 
-		characters(0,19 downto 0) <= "       Time:        ";  --general output from that module
-		characters(1,19 downto 0) <= "A    " + hour + ":" + min + ":" + sec + "  " + DCL + " S";
-		characters(2,19 downto 0) <= "                    ";
-		characters(3,19 downto 0) <= "                    ";
 
- 		if(uni.reset = '1') then --reset-State: 00:00:00
-			hour := "00";
-			min  := "00";
-			sec  := "00";
-			DCL  := "   ";
-		else	   -- get the integer value from the 'to_integer' function
-			hour(1) := to_integer(current_time.hour(5 downto 4)); 
-			hour(0) := to_integer(current_time.hour(3 downto 0));
-			min(1)  := to_integer(current_time.minute(6 downto 4));
-			min(0)  := to_integer(current_time.minute(3 downto 0));
-			sec(1)  := to_integer(current_time.second(6 downto 4));
-			sec(0)  := to_integer(current_time.second(3 downto 0));
-			if (current_time.valid = '1') then  -- decide, if the signal is valid or not. 
-				DCL := "DCF";
+process(uni.clk)
+begin
+	if(rising_edge(uni.clk)) then	
+ 		if(uni.reset = '1') then
+			dcf <= "   ";
+			hour1 <= to_unsigned(0,8);
+			hour2 <= to_unsigned(0,8);
+			min1 <= to_unsigned(0,8);
+			min2 <= to_unsigned(0,8);
+			sec1 <= to_unsigned(0,8);
+			sec2 <= to_unsigned(0,8);
+		else		
+			if((current_time.minute(0) XOR min2(0)) = '1')	then				
+				if(current_time.valid = '1') then
+					ndcf <= "DCF";
+				else
+					ndcf <= "   ";
+				end if;
 			else
-				DCL := "   ";
-			end if;	
+				dcf <= ndcf;
+			end if;
+			hour1 <= "000000" & current_time.hour(5 downto 4);
+			hour2 <= "0000" & current_time.hour(3 downto 0);
+			min1 <= "00000" & current_time.minute(6 downto 4);					
+			min2 <= "0000" & current_time.minute(3 downto 0);			
+			sec1 <= "00000" & current_time.second(6 downto 4);
+			sec2 <= "0000" & current_time.second(3 downto 0);
 		end if;
-
-
 	end if;
 end process;
 
