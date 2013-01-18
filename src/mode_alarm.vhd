@@ -15,7 +15,7 @@ entity mode_alarm is
     ctime               :in  time_signals;
     keyboard_focus      :in  std_logic(3 downto 0);
 -- output, mode_alarm is 1 ??
-    characters          :out character_array_3d(2 downto 0, 3 downto 0, 19 downto 0);
+    characters          :out character_array_2d(3 downto 0, 19 downto 0);
     alarm_active        :out std_logic;
 -- alarm is ringing
     alarm_on            :out std_logic;
@@ -88,8 +88,8 @@ begin
           end if;
       -- print display output
      --   characters(1,2,19 downto 0) <= star+"     Alarm:        "; -- display output
-        characters(1,2,19 downto 0) <= "      Alarm:        "; -- display output
-        characters(1,3,19 downto 0) <= " "+to_integer(alarm_hour)+":"+to_integer(alarm_minute)+" ";
+        characters(2,19 downto 0) <= "      Alarm:        "; -- display output
+        characters(3,19 downto 0) <= " "+to_integer(alarm_hour)+":"+to_integer(alarm_minute)+" ";
       end if;
     end if;
   end process;
