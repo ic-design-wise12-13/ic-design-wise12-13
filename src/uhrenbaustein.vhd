@@ -1,11 +1,12 @@
 library ieee;
 use ieee.std_logic_1164.all;
-use iee.numeric_std.all;
+use ieee.numeric_std.all;
 
 library work;
 use work.main_pkg.all;
 
 entity uhrenbaustein is
+  generic(num_modes: natueral:=4);
   port(
     clk,
     reset,
@@ -28,5 +29,33 @@ entity uhrenbaustein is
 end uhrenbaustein;
 
 architecture behavioral of uhrenbaustein is
+
+signal uni              :universal_signals;
+signal keys             :keypad_signals;
+signal ctime            :time_signals;
+signal char1            :character_array_1d; -- ??
+          
+
+signal alarm_active     :std_logic;
+signal keyboard_focus   :std_logic_vector( (num_modes-1) downto 0);
+signal visible          :std_logic_vector( (num_modes-1) downto 0);
+signal sdow             :string(1 to 3);   --??
+
+
+
+begin
+su_on <= '0';
+
+uni.clk <= clk;
+uni.reset <= reset;
+
+
+
+mode_alarm_inst: mode_alarm
+  port map(
+    uni => uni,
+    key => key,
+ );
+
 
 end behavioral;
