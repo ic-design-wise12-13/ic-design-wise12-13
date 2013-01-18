@@ -9,14 +9,14 @@ use IEEE.NUMERIC_STD.ALL;
 use work.main_pkg.all;	
 --use ieee.std_unsigned.all
 
-entity Time_State is
+entity mode_time is
       port(
 		uni:               in  universal_signals;
 		current_time:      in  time_signals;
 		
 		characters:        out character_array_2d(3 downto 0, 19 downto 0)
       );
-end Time_State;
+end mode_time;
 
 architecture Behavioral of Time_State is
 	signal char : string(1 to 80);

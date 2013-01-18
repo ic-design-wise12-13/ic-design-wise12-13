@@ -81,19 +81,68 @@ package main_pkg is
 		);
 	end component;
 
-	-- template for each mode (date, alarm, ...)
-	component each_mode is
+	-- -- template for each mode (date, alarm, ...)
+	-- component each_mode is
+	-- 	port(
+	-- 		uni:               in  universal_signals;
+	-- 		keys:              in  keypad_signals;
+	-- 		current_time:      in  time_signals;
+	-- 		keyboard_focus:    in  std_logic;
+
+	-- 		characters:        out character_array_2d(3 downto 0, 19 downto 0)
+
+	-- 		-- plus module-specific outputs
+	-- 	);
+	-- end component;
+
+	component mode_countdown is
 		port(
 			uni:               in  universal_signals;
 			keys:              in  keypad_signals;
-			current_time:      in  time_signals;
-			keyboard_focus:    in  std_logic;
-
-			characters:        out character_array_2d(3 downto 0, 19 downto 0)
-
-			-- plus module-specific outputs
+			keyboard_focus:    in  std_logic_vector (3 downto 0);
+			characters:        out character_array_2d(3 downto 0, 19 downto 0);
+			ti_on:             out std_logic;
+			ti_beep:           out std_logic
 		);
 	end component;
+
+	component mode_date is
+		port(
+			uni:               in  universal_signals;
+			current_time:      in  time_signals;
+
+			characters:        out character_array_2d(3 downto 0, 19 downto 0);
+			sdow:              out string(1 to 3)
+			);
+	end component;
+
+	component mode_alarm is
+		port(
+		-- clk, reset
+		uni:                  in  universal_signals;
+		-- kc_minus_imp, kc_plus_imp, kc_act_imp
+		key:                  in  keypad_signals;
+		-- current_time
+		ctime:                in  time_signals;
+		keyboard_focus:       in  std_logic(3 downto 0);
+		-- output, mode_alarm is 1 ??
+		characters:           out character_array_3d(2 downto 0, 3 downto 0, 19 downto 0);
+		alarm_active:         out std_logic;
+		-- alarm is ringing
+		alarm_on:             out std_logic;
+		-- alarm LED
+		al_on:                out std_logic
+	  );
+	end component;
+
+	entity mode_time is
+		port(
+			uni:               in  universal_signals;
+			current_time:      in  time_signals;
+
+			characters:        out character_array_2d(3 downto 0, 19 downto 0)
+		);
+	end mode_time;
 
 	-- modules:
 	--  - time

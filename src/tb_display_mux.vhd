@@ -10,17 +10,6 @@
 
   ARCHITECTURE behavior OF testbench_mux IS 
 
-  -- Component Declaration
-          COMPONENT display_mux
-          	generic(num_modes: natural := 4);
-				port(
-					uni: in universal_signals;
-					visible: in unsigned(num_modes - 1 downto 0);
-					module_characters: in character_array_3d(num_modes - 1 downto 0, 3 downto 0, 19 downto 0);
-					characters: out character_array_2d(3 downto 0, 19 downto 0)
-				);
-          END COMPONENT;
-
           SIGNAL uni :  universal_signals;
           SIGNAL visible :  unsigned(3 downto 0);
 			 signal module_characters : character_array_3d(3 downto 0, 3 downto 0, 19 downto 0);

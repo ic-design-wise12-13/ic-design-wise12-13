@@ -10,7 +10,7 @@ use IEEE.NUMERIC_STD.ALL;
 --use IEEE.STD_LOGIC_UNSIGNED.ALL;
 use work.main_pkg.all;	
 
-entity Countdown is
+entity mode_countdown is
       port(
 		uni:               in  universal_signals;
 		keys:              in  keypad_signals;
@@ -20,9 +20,9 @@ entity Countdown is
 		ti_on :		   	 out std_logic;
 		ti_beep:           out std_logic
       );
-end Countdown;
+end mode_countdown;
 
-architecture Behavioral of Countdown is
+architecture behavioral of mode_countdown is
 	type timer is (set, start, pause, beep);
 	type int_array is array(1 downto 0) of integer range 0 to 9;
 	type int_array3 is array(3 downto 0) of integer range 0 to 9;	

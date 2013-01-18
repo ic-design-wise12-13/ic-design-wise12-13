@@ -23,7 +23,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;		
 use work.main_pkg.all;	
 
-entity Display_mux is
+entity display_mux is
 	generic(num_modes: natural := 4); 
 	port(
 		uni: in universal_signals;
@@ -31,10 +31,10 @@ entity Display_mux is
 		module_characters: in character_array_3d(num_modes - 1 downto 0, 3 downto 0, 19 downto 0);
 		characters: out character_array_2d(3 downto 0, 19 downto 0)
 	);
-end Display_mux;
+end display_mux;
 
 
-architecture Behavioral of Display_mux is
+architecture behavioral of display_mux is
 
 	component mux
 		port (

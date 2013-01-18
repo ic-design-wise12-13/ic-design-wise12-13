@@ -34,23 +34,10 @@ use work.main_pkg.all;
 -- arithmetic functions with Signed or Unsigned values
 --USE ieee.numeric_std.ALL;
  
-ENTITY tb_Countdown_tb IS
-END tb_Countdown_tb;
+ENTITY tb_mode_ountdown IS
+END tb_mode_ountdown;
  
-ARCHITECTURE behavior OF tb_Countdown_tb IS 
- 
-    COMPONENT Countdown
-    PORT(
-		uni:               in  universal_signals;
-		keys:              in  keypad_signals;
-		keyboard_focus:    in  std_logic_vector (3 downto 0); 
-		
-		characters:        out character_array_2d(3 downto 0, 19 downto 0);
-		ti_on :		   	 out std_logic;
-		ti_beep:           out std_logic
-        );
-    END COMPONENT;
-    
+ARCHITECTURE behavior OF tb_mode_countdown IS 
 
    --Inputs
 	signal uni: universal_signals := (others => '0');
@@ -66,7 +53,7 @@ ARCHITECTURE behavior OF tb_Countdown_tb IS
 BEGIN
  
 	-- Instantiate the Unit Under Test (UUT)
-   uut: Countdown PORT MAP (
+   uut: countdown PORT MAP (
 			 uni => uni,
 			 keys => keys,
           keyboard_focus => keyboard_focus,
