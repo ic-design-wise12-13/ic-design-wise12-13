@@ -71,14 +71,14 @@ display.
 
 			\node[above] at (3,0) {display\_driver};
 
-			\draw[line width=2pt,->] (-2, -3.25) |- (0, -0.5) node[right] { uni };
+			\draw[line width=2pt,->] (-1, -3.25) |- (0, -0.5) node[right] { uni };
 
-			\draw (-2, -0.5) ++(0,-.2) -- ++(-.2,.2) -- ++(-.8, 0) node[left] {clk};
-			\draw (-2, -1.0) ++(0,-.2) -- ++(-.2,.2) -- ++(-.8, 0) node[left] {reset};
-			\draw (-2, -1.5) ++(0,-.2) -- ++(-.2,.2) -- ++(-.8, 0) node[left] {enable\_1};
-			\draw (-2, -2.0) ++(0,-.2) -- ++(-.2,.2) -- ++(-.8, 0) node[left] {enable\_10};
-			\draw (-2, -2.5) ++(0,-.2) -- ++(-.2,.2) -- ++(-.8, 0) node[left] {enable\_50};
-			\draw (-2, -3.0) ++(0,-.2) -- ++(-.2,.2) -- ++(-.8, 0) node[left] {enable\_100};
+			\draw (-1, -0.5) ++(0,-.2) -- ++(-.2,.2) -- ++(-.8, 0) node[left] {clk};
+			\draw (-1, -1.0) ++(0,-.2) -- ++(-.2,.2) -- ++(-.8, 0) node[left] {reset};
+			\draw (-1, -1.5) ++(0,-.2) -- ++(-.2,.2) -- ++(-.8, 0) node[left] {enable\_1};
+			\draw (-1, -2.0) ++(0,-.2) -- ++(-.2,.2) -- ++(-.8, 0) node[left] {enable\_10};
+			\draw (-1, -2.5) ++(0,-.2) -- ++(-.2,.2) -- ++(-.8, 0) node[left] {enable\_50};
+			\draw (-1, -3.0) ++(0,-.2) -- ++(-.2,.2) -- ++(-.8, 0) node[left] {enable\_100};
 
 			\draw[line width=4pt,->] (-2, -3.5) -- (0, -3.5) node[right] { characters[3:0][19:0][7:0] };
 
@@ -256,7 +256,7 @@ figure~\ref{display_driver_waveform}.
 			\draw (-1, -2.5) ++(0,-.2) -- ++(-.2,.2) -- ++(-.8, 0) node[left] {month[4:0]};
 			\draw (-1, -3.0) ++(0,-.2) -- ++(-.2,.2) -- ++(-.8, 0) node[left] {year[7:0]};
 			\draw (-1, -3.5) ++(0,-.2) -- ++(-.2,.2) -- ++(-.8, 0) node[left] {minute[6:0]};
-			\draw (-1, -4.0) ++(0,-.2) -- ++(-.2,.2) -- ++(-.8, 0) node[left] {seconds[6:0]};
+			\draw (-1, -4.0) ++(0,-.2) -- ++(-.2,.2) -- ++(-.8, 0) node[left] {second[6:0]};
 			\draw (-1, -4.5) ++(0,-.2) -- ++(-.2,.2) -- ++(-.8, 0) node[left] {valid};
 
 			\draw[line width=2pt] (5, -4.75) |- (4, -1.0) node[left] { time\_out };
@@ -267,7 +267,7 @@ figure~\ref{display_driver_waveform}.
 			\draw[->] (5, -2.5) ++(0,-.2) -- ++(.2,.2) -- ++(.8, 0) node[right] {month[4:0]};
 			\draw[->] (5, -3.0) ++(0,-.2) -- ++(.2,.2) -- ++(.8, 0) node[right] {year[7:0]};
 			\draw[->] (5, -3.5) ++(0,-.2) -- ++(.2,.2) -- ++(.8, 0) node[right] {minute[6:0]};
-			\draw[->] (5, -4.0) ++(0,-.2) -- ++(.2,.2) -- ++(.8, 0) node[right] {seconds[6:0]};
+			\draw[->] (5, -4.0) ++(0,-.2) -- ++(.2,.2) -- ++(.8, 0) node[right] {second[6:0]};
 			\draw[->] (5, -4.5) ++(0,-.2) -- ++(.2,.2) -- ++(.8, 0) node[right] {valid};
 
 			\draw (0,0) rectangle (4, -1.5);
@@ -276,12 +276,12 @@ figure~\ref{display_driver_waveform}.
 	\caption{Block diagram of the time buffer}
 \end{figure}
 
-The time buffer receives the decoded DCT signal (including the valid bit and a
-seconds field which will always be zero). If the valid bit is set, it buffers
-the time and valid bit in an internal register. Every full second after a reset
-or received valid signal, the stored time is incremented. If an increment
-causes the seconds to overflow from 59 back to 0, the stored valid bit is
-reset.
+The time buffer receives the decoded DCT signal, including the valid bit. The
+second field is always set to zero in the actual circuit, but is useful for
+testing and symmetry. If the valid bit is set, it buffers the time and valid
+bit in an internal register. Every full second after a reset or received valid
+signal, the stored time is incremented. If an increment causes the second to
+overflow from 59 back to 0, the stored valid bit is reset.
 
 At reset, the stored time is set to Sat January 1, 2000, 00:00:00 and marked as
 invalid.
@@ -307,7 +307,7 @@ counter and the values of the valid and reset inputs.
 Since there are so many special cases to be considered when dealing with time
 and date arithmetic, a test bench was created that prints out the current time
 once per simulated second. It will either leave the unit alone, yieling one
-line per second, or permanently set the hours, minutes and seconds to 23:59:59,
+line per second, or permanently set the hour, minute and second to 23:59:59,
 allowing fast testing of the date logic.
 
 Both versions of the test bench were run to create one secondly log file
