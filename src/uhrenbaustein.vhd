@@ -51,10 +51,19 @@ component mode_fsm is
   );
 end component;
 
-component mux is
+-- not needed here?
+--component mux is
+--  port(
+--    visible                   :in unsigned (3 downto 0);
+--    input                     :in character_array_id (3 downto 0);
+--    input                     :out unsigned (7 downto 0)
+--  );
+--end component;
+
+component Display_mux is  -- do we want to keep Capital D?? file name is display_mux.vhd
   port(
     visible                   :in unsigned (3 downto 0);
-    input                     :in character_array_id (3 downto 0);
-    input                     :out unsigned (7 downto 0)
+    input                     :in character_array_1d (num_modes -1 downto 0);
+    output                    :out unsigned (7 downto 0)
   );
 end component;
