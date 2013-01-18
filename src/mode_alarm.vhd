@@ -6,19 +6,19 @@ use work.main_pkg.all; -- was fuer eine library wird da verwendet??
 entity mode_alarm is
   port(
 -- clk, reset
-    uni: in universal_signals;
+    uni                 :in  universal_signals;
 -- kc_minus_imp, kc_plus_imp, kc_act_imp
-    key: in keypad_signals;
+    key                 :in  keypad_signals;
 -- current_time
-    ctime: in time_signals;
-    keyboard_focus: in std_logic(3 downto 0);
+    ctime               :in  time_signals;
+    keyboard_focus      :in  std_logic(3 downto 0);
 -- output, mode_alarm is 1 ??
-    characters: out character_array_3d(2 downto 0,3 downto 0, 19 downto 0);
-    alarm_active: out std_logic;
+    characters          :out character_array_3d(2 downto 0, 3 downto 0, 19 downto 0);
+    alarm_active        :out std_logic;
 -- alarm is ringing
-    alarm_on: out std_logic;
+    alarm_on            :out std_logic;
 -- alarm LED
-    al_on: out std_logic
+    al_on               :out std_logic
   );
 end mode_alarm;
 
@@ -29,19 +29,19 @@ architecture behavioral of mode_alarm is
     SNOOZE,
     ALARM_OFF
   );
-  signal alarm_state: alarm_state_t;
+  signal alarm_state    :alarm_state_t;
 
-  signal snooze_hour: std_logic_vector(5 downto 0);
-  signal snooze_minute: std_logic_vector(6 downto 0);
-  signal alarm_hour: std_logic_vector(5 downto 0);
-  signal alarm_minute: std_logic_vector(6 downto 0);
+  signal snooze_hour    :std_logic_vector(5 downto 0);
+  signal snooze_minute  :std_logic_vector(6 downto 0);
+  signal alarm_hour     :std_logic_vector(5 downto 0);
+  signal alarm_minute   :std_logic_vector(6 downto 0);
 
 
 begin
 
 
   process(uni.clk)
-    variable star: character;
+    variable star       :character;
   begin
     if rising_edge(uni.clk) then
     -- RESET
@@ -69,7 +69,7 @@ begin
               if alarm_hour="010111" then -- 23 hours
                 alarm_hour<="000000";
               else
-                alarm_hour<=alarm_hour+1pstd_logic_vector( unsigned(alarm_hour) +1);
+                alarm_hour<=std_logic_vector( unsigned(alarm_hour) +1);
               end if;
               alarm_minute<="0000000";
             else
@@ -85,7 +85,8 @@ begin
             end if;
           end if;
       -- print display output
-        characters(1,2,19 downto 0) <= star+" Alarm: "; -- display output
+     --   characters(1,2,19 downto 0) <= star+"     Alarm:        "; -- display output
+        characters(1,2,19 downto 0) <= "      Alarm:        "; -- display output
         characters(1,3,19 downto 0) <= " "+to_integer(alarm_hour)+":"+to_integer(alarm_minute)+" ";
       end if;
     end if;
