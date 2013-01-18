@@ -74,12 +74,12 @@ begin
 			year2 <= to_unsigned(0,8);
 		else	
 			ndow <= dow;
-			day1 <= "000000" & current_time.day(5 downto 4);
-			day2 <= "0000" & current_time.day(3 downto 0);
-			mon1 <= "0000000" & current_time.month(4);					
-			mon2 <= "0000" & current_time.month(3 downto 0);			
-			year1 <= "0000" & current_time.year(7 downto 4);
-			year2 <= "0000" & current_time.year(3 downto 0);
+			day1  <= "001100" & current_time.day(5 downto 4);
+			day2  <= "0011" & current_time.day(3 downto 0);
+			mon1  <= "0011000" & current_time.month(4);					
+			mon2  <= "0011" & current_time.month(3 downto 0);			
+			year1 <= "0011" & current_time.year(7 downto 4);
+			year2 <= "0011" & current_time.year(3 downto 0);
 		end if;
 	end if;
 end process;

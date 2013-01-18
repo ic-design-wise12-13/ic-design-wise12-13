@@ -112,10 +112,10 @@ begin
 				characters(row, col) <= to_unsigned(character'pos(char(20*row + col + 1)), 8);
 			end loop;
 		end loop;
-		characters(3,7) <= min1;
-		characters(3,8) <= min0;	
-		characters(3,10) <= hour1;	
-		characters(3,11) <= hour0;	
+		characters(3,7) <= hour1;
+		characters(3,8) <= hour0;	
+		characters(3,10) <= min1;	
+		characters(3,11) <= min0;	
 		characters(3,14) <= to_unsigned(character'pos(state(3)),8);
 		characters(3,15) <= to_unsigned(character'pos(state(2)),8);		
 		characters(3,16) <= to_unsigned(character'pos(state(1)),8);

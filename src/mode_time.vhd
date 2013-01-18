@@ -18,9 +18,9 @@ entity mode_time is
       );
 end mode_time;
 
-architecture Behavioral of Time_State is
+architecture behavioral of mode_time is
 	signal char : string(1 to 80);
-	signal ndcf, dcf : string(1 to 3);
+	signal dcf : string(1 to 3);
 	signal hour1, hour2, mindelay, min1, min2, sec1, sec2 : unsigned(7 downto 0);
 begin
 
@@ -69,23 +69,19 @@ begin
 			sec1 <= to_unsigned(0,8);
 			sec2 <= to_unsigned(0,8);
 		else		
-			if((current_time.minute(0) XOR min2(0)) = '1')	then				
-				if(current_time.valid = '1') then
-					ndcf <= "DCF";
-				else
-					ndcf <= "   ";
-				end if;
+			if(current_time.valid = '1') then
+				dcf <= "DCF";
 			else
-				dcf <= ndcf;
+				dcf <= "   ";
 			end if;
-			hour1 <= "000000" & current_time.hour(5 downto 4);
-			hour2 <= "0000" & current_time.hour(3 downto 0);
-			min1 <= "00000" & current_time.minute(6 downto 4);					
-			min2 <= "0000" & current_time.minute(3 downto 0);			
-			sec1 <= "00000" & current_time.second(6 downto 4);
-			sec2 <= "0000" & current_time.second(3 downto 0);
+			hour1 <= "001100" & current_time.hour(5 downto 4);
+			hour2 <= "0011" & current_time.hour(3 downto 0);
+			min1 <=  "00110" & current_time.minute(6 downto 4);					
+			min2 <=  "0011" & current_time.minute(3 downto 0);			
+			sec1 <=  "00110" & current_time.second(6 downto 4);
+			sec2 <=  "0011" & current_time.second(3 downto 0);
 		end if;
 	end if;
 end process;
 
-end Behavioral;
+end behavioral;
