@@ -15,12 +15,13 @@ entity mode_alarm is
     ctime:          in  time_signals;
     keyboard_focus: in  std_logic(3 downto 0);
 -- output, mode_alarm is 1 ??
-    characters:     out chacracter_array_3d(2 downto 0,3 downto 0, 19 downto 0);
+    characters:     out character_array_3d(2 downto 0,3 downto 0, 19 downto 0);
     alarm_active:   out std_logic;
 -- alarm is ringing
     alarm_on:       out std_logic;
 -- alarm LED 
-    al_on:          out std_logic;
+    al_on:          out std_logic
+  );
 end mode_alarm;
 
 architecture behavioral of mode_alarm is
