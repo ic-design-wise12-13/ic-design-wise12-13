@@ -99,7 +99,7 @@ package main_pkg is
 		port(
 			uni:               in  universal_signals;
 			keys:              in  keypad_signals;
-			keyboard_focus:    in  std_logic_vector (3 downto 0);
+			keyboard_focus:    in  std_logic;
 			characters:        out character_array_2d(3 downto 0, 19 downto 0);
 			ti_on:             out std_logic;
 			ti_beep:           out std_logic
@@ -123,7 +123,7 @@ package main_pkg is
 		key:                  in  keypad_signals;
 		-- current_time
 		ctime:                in  time_signals;
-		keyboard_focus:       in  std_logic(3 downto 0);
+		keyboard_focus:       in  std_logic;
 		-- output, mode_alarm is 1 ??
 		characters:           out character_array_3d(2 downto 0, 3 downto 0, 19 downto 0);
 		alarm_active:         out std_logic;
@@ -134,14 +134,14 @@ package main_pkg is
 	  );
 	end component;
 
-	entity mode_time is
+	component mode_time is
 		port(
 			uni:               in  universal_signals;
 			current_time:      in  time_signals;
 
 			characters:        out character_array_2d(3 downto 0, 19 downto 0)
 		);
-	end mode_time;
+	end component;
 
 	-- modules:
 	--  - time

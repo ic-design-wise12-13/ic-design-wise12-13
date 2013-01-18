@@ -49,15 +49,15 @@ begin
 		loop2:for j in 19 downto 0 generate
 	
 			-- first two lines always from time_module
-			first_2nd_line: if i >= 2 generate
+			first_2nd_line: if i < 2 generate
 				characters(i, j) <= module_characters (3, i, j);
 			end generate;
 		
-			active_alarm: if (i = 1 AND j = 19) generate
+			active_alarm: if (i = 2 AND j = 0) generate
 				characters (i, j) <= module_characters (1, i, j); -- star for active alarm
 			end generate;
 		
-			all_others: if (i < 2 AND NOT (i = 1 AND j = 19)) generate -- other displaycharacters asigned by 4-to-1 multiplexers
+			all_others: if (i >= 2 AND NOT (i = 2 AND j = 0)) generate -- other displaycharacters asigned by 4-to-1 multiplexers
 				multiplex: mux port map (visible => visible,
 									input (3) => module_characters (3, i, j),
 									input (2) => module_characters (2, i, j),
@@ -68,5 +68,5 @@ begin
 			end generate;
 		end generate;
 	end generate;
-end Behavioral;
+end behavioral;
 
