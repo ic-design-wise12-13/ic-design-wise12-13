@@ -33,6 +33,7 @@ architecture behavioral of uhrenbaustein is
 signal uni                    :universal_signals;
 signal keys                   :keypad_signals;
 signal ctime                  :time_signals;
+signal dcf_time               :time_signals;
 
 signal alarm_active           :std_logic;
 signal visible                :unsigned( (num_modes-1) downto 0);
@@ -69,7 +70,14 @@ keys.kc_minus_imp <= kc_minus_imp;
 keys.kc_act_imp <= kc_act_imp;
 keys.kc_mode_imp <= kc_mode_imp;
 
-
+dcf_time.dayofweek <= de_dcf_dayofweek;
+dcf_time.day <= de_dcf_day;
+dcf_time.hour <= de_dcf_hour;
+dcf_time.month <= de_dcf_month;
+dcf_time.year <= de_dcf_year;
+dcf_time.minute <= de_dcf_minute;
+dcf_time.second <= de_dcf_second;
+dcf_time.valid <= de_dcf_set;
 
 
 display_driver_inst: display_driver
@@ -137,5 +145,11 @@ mode_time_inst: mode_time
     characters => time_char
   );
 
+time_buffer_inst: time_buffer
+  port map(
+    uni => uni,
+    time_in =>  dcf_time,
+    time_out => ctime
+  );
 
 end behavioral;
