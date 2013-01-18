@@ -10,17 +10,6 @@
 
   ARCHITECTURE behavior OF testbench IS 
 
-  -- Component Declaration
- COMPONENT Date
- PORT(
-		uni:               in  universal_signals;
-		current_time:      in  time_signals;
-		
-		characters:        out character_array_2d(3 downto 0, 19 downto 0);
-		sdow:		out string (1 to 3)
-			);
- END COMPONENT;
-
  --input
  SIGNAL uni :  universal_signals := (others => '0');
  signal current_time : time_signals;
@@ -33,7 +22,7 @@
   BEGIN
 
   -- Component Instantiation
- uut: Date PORT MAP(
+ uut: date PORT MAP(
 			uni => uni,
 			current_time => current_time,
 			characters => characters,

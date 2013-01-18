@@ -8,7 +8,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;		
 use work.main_pkg.all;	
 
-entity Date is
+entity mode_date is
       port(
 		uni:               in  universal_signals;
 		current_time:      in  time_signals;
@@ -18,7 +18,7 @@ entity Date is
       );
 end Date;
 
-architecture Behavioral of Date is
+architecture behavioral of mode_date is
 
 	signal char : string(1 to 80);
 	signal dow, ndow : string(1 to 3);
