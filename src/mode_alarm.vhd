@@ -13,7 +13,7 @@ entity mode_alarm is
     key                 :in  keypad_signals;
 -- current_time
     ctime               :in  time_signals;
-    keyboard_focus      :in  std_logic(3 downto 0);
+    keyboard_focus      :in  std_logic;
 -- output, mode_alarm is 1 ??
     characters          :out character_array_2d(3 downto 0, 19 downto 0);
     alarm_active        :out std_logic;
@@ -52,7 +52,7 @@ begin
         alarm_hour<="000000";
         alarm_minute<="000111"; -- 7 minuten
 
-      elsif keyboard_focus = "0010" then -- check keyboard focus
+      elsif keyboard_focus = '1' then -- check keyboard focus
         if alarm_active='0' then
       -- set Alarm time
           if key.kc_minus_imp = '1' then
