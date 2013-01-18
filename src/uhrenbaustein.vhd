@@ -6,7 +6,7 @@ library work;
 use work.main_pkg.all;
 
 entity uhrenbaustein is
-  generic(num_modes: natueral:=4);
+  generic(num_modes: natural:=4);
   port(
     clk,
     reset,
@@ -36,8 +36,9 @@ signal ctime                  :time_signals;
 signal dcf_time               :time_signals;
 
 signal alarm_active           :std_logic;
+signal alarm_on               :std_logic;
 signal visible                :unsigned( (num_modes-1) downto 0);
-signal all_char               :character_array_3d( (num_modes-1) downto 0, 3 downto 0, 7 downto 0); 
+signal all_char               :character_array_3d_HACK(num_modes - 1 downto 0);
 signal time_char              :character_array_2d( 3 downto 0, 19 downto 0);
 signal m_date_char            :character_array_2d( 3 downto 0, 19 downto 0);
 signal m_alarm_char           :character_array_2d( 3 downto 0, 19 downto 0);
@@ -49,10 +50,18 @@ signal keyboard_focus         :unsigned( (num_modes-1) downto 0);
 begin
 su_on <= '0';    -- set unused variable to 0
 
-all_char(0, 3 downto 0, 19 downto 0) <= m_countdown_char;  -- put display outputs together
-all_char(1, 3 downto 0, 19 downto 0) <= m_alarm_char;
-all_char(2, 3 downto 0, 19 downto 0) <= m_date_char;
-all_char(3, 3 downto 0, 19 downto 0) <= time_char;
+process(m_countdown_char, m_alarm_char, m_date_char, time_char)
+begin
+	for row in 0 to 3 loop
+		for col in 0 to 19 loop
+			all_char(0)(row, col) <= m_countdown_char(row, col);  -- put display outputs together
+			all_char(1)(row, col) <= m_alarm_char(row, col);
+			all_char(2)(row, col) <= m_date_char(row, col);
+			all_char(3)(row, col) <= time_char(row, col);
+		end loop;
+	end loop;
+end process;
+
 
 
 uni.clk <= clk;
@@ -92,18 +101,21 @@ display_driver_inst: display_driver
  );
 
 display_mux_inst: display_mux
+  generic map(
+    num_modes => num_modes
+  )
   port map(
     uni => uni,
     visible => visible,
     module_characters => all_char,
-    characters => display_char,
+    characters => display_char
  );
 
 
 mode_alarm_inst: mode_alarm
   port map(
     uni => uni,
-    key => key,
+    keys => keys,
     ctime => ctime,
     keyboard_focus => keyboard_focus(1),
     characters => m_alarm_char,
@@ -129,7 +141,10 @@ mode_date_inst: mode_date
     characters => m_date_char
  );
 
-mode_fms_inst: mode_fsm
+mode_fsm_inst: mode_fsm
+  generic map(
+    num_modes => num_modes
+  )
   port map(
     uni => uni,
     keys => keys,

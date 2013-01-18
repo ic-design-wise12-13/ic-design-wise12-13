@@ -28,7 +28,7 @@ entity display_mux is
 	port(
 		uni: in universal_signals;
 		visible: in unsigned(num_modes - 1 downto 0);
-		module_characters: in character_array_3d(num_modes - 1 downto 0, 3 downto 0, 19 downto 0);
+		module_characters: in character_array_3d_HACK(num_modes - 1 downto 0);
 		characters: out character_array_2d(3 downto 0, 19 downto 0)
 	);
 end display_mux;
@@ -50,19 +50,19 @@ begin
 	
 			-- first two lines always from time_module
 			first_2nd_line: if i < 2 generate
-				characters(i, j) <= module_characters (3, i, j);
+				characters(i, j) <= module_characters (3)(i, j);
 			end generate;
 		
 			active_alarm: if (i = 2 AND j = 0) generate
-				characters (i, j) <= module_characters (1, i, j); -- star for active alarm
+				characters (i, j) <= module_characters (1)(i, j); -- star for active alarm
 			end generate;
 		
 			all_others: if (i >= 2 AND NOT (i = 2 AND j = 0)) generate -- other displaycharacters asigned by 4-to-1 multiplexers
 				multiplex: mux port map (visible => visible,
-									input (3) => module_characters (3, i, j),
-									input (2) => module_characters (2, i, j),
-									input (1) => module_characters (1, i, j),
-									input (0) => module_characters (0, i, j),
+									input (3) => module_characters (3)(i, j),
+									input (2) => module_characters (2)(i, j),
+									input (1) => module_characters (1)(i, j),
+									input (0) => module_characters (0)(i, j),
 									output => characters (i, j)
 									);
 			end generate;

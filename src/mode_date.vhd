@@ -15,7 +15,7 @@ entity mode_date is
 		
 		characters:        out character_array_2d(3 downto 0, 19 downto 0)
       );
-end Date;
+end mode_date;
 
 architecture behavioral of mode_date is
 

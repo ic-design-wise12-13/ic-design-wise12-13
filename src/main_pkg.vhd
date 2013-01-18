@@ -40,7 +40,8 @@ package main_pkg is
 	-- types to define arrays of characters
 	type character_array_1d is array(natural range <>) of unsigned(7 downto 0);
 	type character_array_2d is array(natural range <>, natural range <>) of unsigned(7 downto 0);
-	type character_array_3d is array(natural range <>, natural range <>, natural range <>) of unsigned(7 downto 0);
+	-- XST does not support arrays with more than 2 dimensions
+	type character_array_3d_HACK is array(natural range <>) of character_array_2d(3 downto 0, 19 downto 0);
 
 	-- component that maintains its own clock and synchronizes it to the DCT signal if it's valid
 	component time_buffer is
@@ -120,12 +121,12 @@ package main_pkg is
 		-- clk, reset
 		uni:                  in  universal_signals;
 		-- kc_minus_imp, kc_plus_imp, kc_act_imp
-		key:                  in  keypad_signals;
+		keys:                 in  keypad_signals;
 		-- current_time
 		ctime:                in  time_signals;
 		keyboard_focus:       in  std_logic;
 		-- output, mode_alarm is 1 ??
-		characters:           out character_array_3d(2 downto 0, 3 downto 0, 19 downto 0);
+		characters:           out character_array_2d(3 downto 0, 19 downto 0);
 		alarm_active:         out std_logic;
 		-- alarm is ringing
 		alarm_on:             out std_logic;
@@ -156,7 +157,7 @@ package main_pkg is
 		port(
 			uni:               in  universal_signals;
 			visible:           in  unsigned(num_modes - 1 downto 0);
-			module_characters: in character_array_3d(num_modes - 1 downto 0, 3 downto 0, 19 downto 0);
+			module_characters: in character_array_3d_HACK(num_modes - 1 downto 0);
 			characters:        out character_array_2d(3 downto 0, 19 downto 0)
 		);
 	end component;
