@@ -14,17 +14,17 @@ entity uhrenbaustein is
     de_dcf_set,
     kc_up_dn, kc_enable, kc_act_long, kc_plus_imp, kc_minus_imp, kc_act_imp, kc_mode_imp
                               :in std_logic;
-    de_dcf_dayofweek          :in std_logic_vector(2 downto 0);
-    de_dcf_day, de_dcf_hour   :in std_logic_vector(5 downto 0);
-    de_dcf_month              :in std_logic_vector(4 downto 0);
-    de_dcf_year               :in std_logic_vector(7 downto 0);
-    de_dcf_minute             :in std_logic_vector(6 downto 0);
+    de_dcf_dayofweek          :in unsigned(2 downto 0);
+    de_dcf_day, de_dcf_hour   :in unsigned(5 downto 0);
+    de_dcf_month              :in unsigned(4 downto 0);
+    de_dcf_year               :in unsigned(7 downto 0);
+    de_dcf_minute             :in unsigned(6 downto 0);
 
     al_on,
     su_on,
     ti_on, ti_beep,
     d_en, d_rw, d_rs          :out std_logic;
-    d_data                    :out std_logic_vector(7 downto 0)
+    d_data                    :out unsigned(7 downto 0)
   );
 end uhrenbaustein;
 
@@ -35,7 +35,7 @@ signal keys                   :keypad_signals;
 signal ctime                  :time_signals;
 
 signal alarm_active           :std_logic;
-signal visible                :std_logic_vector( (num_modes-1) downto 0);
+signal visible                :unsigned( (num_modes-1) downto 0);
 signal all_char               :character_array_3d( (num_modes-1) downto 0, 3 downto 0, 7 downto 0); 
 signal time_char              :character_array_2d( 3 downto 0, 19 downto 0);
 signal m_date_char            :character_array_2d( 3 downto 0, 19 downto 0);
