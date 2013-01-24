@@ -8,7 +8,9 @@ use work.main_pkg.all;
 -- see main_pkg for signal descriptions
 entity time_buffer is
 	generic(
-		clock_divider: natural := 10000
+		clock_divider: natural := 10000;
+		ignore_dcf: boolean := false;
+		reset_time: time_signals := ("110", "000001", "000000", "00001", x"00", "0000000", "0000000", '0')
 	);
 	port(
 		uni:               in  universal_signals;
@@ -33,8 +35,8 @@ begin
 
 			if uni.reset = '1' then
 				-- counter already reset by default assignment
-				current_time <= ("110", "000001", "000000", "00001", x"00", "0000000", "0000000", '0'); -- Sat January 1, 2000, 00:00:00, invalid
-			elsif time_in.valid = '1' then
+				current_time <= reset_time;
+			elsif time_in.valid = '1' and not ignore_dcf then
 				-- register new time information and restart the minute counter
 				current_time <= time_in;
 			elsif counter = clock_divider - 1 then
