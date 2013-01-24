@@ -167,7 +167,7 @@ begin
 
 -- AlarmOn FSM
   process(uni.clk)
-  variable snooze_add_hour    :unsigned (6 downto 0);
+  variable snooze_add_hour    :unsigned (5 downto 0);
   variable snooze_add_minute  :unsigned (6 downto 0);
   begin
     if rising_edge(uni.clk) then
@@ -187,27 +187,27 @@ begin
             alarm_state<=SNOOZE;
             alarm_on<='0';
             al_on<='0';
-            snooze_add_hour <= snooze_add_hour;
-            snooze_add_minute <= snooze_add_minute;
+            snooze_add_hour := snooze_add_hour;
+            snooze_add_minute := snooze_add_minute;
             for i in 0 to 4 loop -- add 1 minute five times
               if snooze_add_minute="1011001" then -- 59 mins
                 if snooze_add_hour="100011" then -- 23 hrs
-                  snooze_add_hour<="000000";
+                  snooze_add_hour:="000000";
                 else
                   if snooze_add_hour(3 downto 0) /= "1001" then
-                    snooze_add_hour<=snooze_add_hour + 1;
+                    snooze_add_hour:=snooze_add_hour + 1;
                   else
-                    snooze_add_hour(5 downto 4) <= snooze_add_hour(5 downto 4) +1;
-                    snooze_add_hour(3 downto 0) <= "0000";
+                    snooze_add_hour(5 downto 4) := snooze_add_hour(5 downto 4) +1;
+                    snooze_add_hour(3 downto 0) := "0000";
                   end if;  
                 end if;
-                snooze_add_minute<="0000000";
+                snooze_add_minute:="0000000";
               else
                 if snooze_add_minute(3 downto 0) /= "1001" then
-                  snooze_add_minute <= snooze_add_minute +1;
+                  snooze_add_minute := snooze_add_minute +1;
                 else 
-                  snooze_add_minute(6 downto 4) <= snooze_add_minute(6 downto 4) +1;
-                  snooze_add_minute(3 downto 0) <= "0000";
+                  snooze_add_minute(6 downto 4) := snooze_add_minute(6 downto 4) +1;
+                  snooze_add_minute(3 downto 0) := "0000";
                 end if;
               end if;
             end loop;
