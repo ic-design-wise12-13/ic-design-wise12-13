@@ -276,17 +276,23 @@ figure~\ref{display_driver_waveform}.
 	\caption{Block diagram of the time buffer}
 \end{figure}
 
-The time buffer receives the decoded DCT signal, including the valid bit. The
-second field is always set to zero in the actual circuit, but is useful for
-testing and symmetry. If the valid bit is set, it buffers the time and valid
-bit in an internal register. Every full second after a reset or received valid
-signal, the stored time is incremented. If an increment causes the second to
-overflow from 59 back to 0, the stored valid bit is reset.
+The decoded DCT signal is only valid occasionally and doesn't include the
+current second (it is only valid at the full minute, even less frequently if
+there have been reception errors. This module compensates for that and always
+provides a valid time including seconds. It also has an output indicating
+whether a valid DCT signal has been received within the last minute.
 
 At reset, the stored time is set to Sat January 1, 2000, 00:00:00 and marked as
 invalid.
 
 \subsection{Implementation}
+
+It time buffer receives the decoded DCT signal, including the valid bit. The
+second field is always set to zero in the actual circuit, but is useful for
+testing and symmetry. If the valid bit is set, it buffers the time and valid
+bit in an internal register. Every full second after a reset or received valid
+signal, the stored time is incremented. If an increment causes the second to
+overflow from 59 back to 0, the stored valid bit is reset. An RTL diagram can be seen in figure~\ref{time_buffer_block}.
 
 \begin{figure}
 	\begin{center}
@@ -325,12 +331,14 @@ invalid.
 			\draw[white!50!black,line width=2pt] (-1,-4.25) node[left,black] {uni} -- (3.25,-4.25);
 			\draw[->] (2.333333,-4.25) node[circ] {} -- (2.333333,-4) node[above] {R};
 			\draw[->] (2.666667,-4.25) node[circ] {} -- (2.666667,-4);
+			\draw[->] (3,-4.25) node[circ] {} -- (3,-4.75);
 			\draw (2.666667,-4) +(0.173205,0) -- +(0,.2) -- +(-0.173205,0);
 			\draw (3,-4.75) +(0.173205,0) -- +(0,-.2) -- +(-0.173205,0);
 
 		\end{tikzpicture}
 	\end{center}
 	\caption{Internal implementation of the time buffer module}
+	\label{time_buffer_block}
 \end{figure}
 
 A simple asynchronous ripple carry adder is used to compute the value of the
