@@ -5,10 +5,10 @@
   USE ieee.numeric_std.ALL;
   use work.main_pkg.all;
 
-  ENTITY testbench_mux IS
-  END testbench_mux;
+  ENTITY tb_display_mux IS
+  END tb_display_mux;
 
-  ARCHITECTURE behavior OF testbench_mux IS 
+  ARCHITECTURE behavior OF tb_display_mux IS 
 
           SIGNAL uni :  universal_signals;
           SIGNAL visible :  unsigned(3 downto 0);

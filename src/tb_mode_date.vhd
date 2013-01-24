@@ -22,7 +22,7 @@
   BEGIN
 
   -- Component Instantiation
- uut: date PORT MAP(
+ uut: mode_date PORT MAP(
 			uni => uni,
 			current_time => current_time,
 			characters => characters,

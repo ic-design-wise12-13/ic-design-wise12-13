@@ -11,14 +11,14 @@
   ARCHITECTURE behavior OF testbench_time IS 
 
   -- Component Declaration
-          COMPONENT Time_State
-          PORT(
-					uni:               in  universal_signals;
-					current_time:      in  time_signals;
-					
-					characters:        out character_array_2d(3 downto 0, 19 downto 0)
-                  );
-          END COMPONENT;
+  --        COMPONENT mode_time
+  --        PORT(
+	--				uni:               in  universal_signals;
+	--				current_time:      in  time_signals;
+	--				
+	--				characters:        out character_array_2d(3 downto 0, 19 downto 0)
+  --                );
+  --        END COMPONENT;
 	--input
 	signal	uni:                universal_signals;
 	signal	current_time:       time_signals;
@@ -29,7 +29,7 @@
   BEGIN
 
   -- Component Instantiation
-          uut: Time_State PORT MAP(
+          uut: mode_time PORT MAP(
                   uni => uni,
                   current_time => current_time,
 						characters => characters

@@ -34,8 +34,8 @@ use work.main_pkg.all;
 -- arithmetic functions with Signed or Unsigned values
 --USE ieee.numeric_std.ALL;
  
-ENTITY tb_mode_ountdown IS
-END tb_mode_ountdown;
+ENTITY tb_mode_countdown IS
+END tb_mode_countdown;
  
 ARCHITECTURE behavior OF tb_mode_countdown IS 
 
