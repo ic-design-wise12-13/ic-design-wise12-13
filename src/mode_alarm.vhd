@@ -118,6 +118,7 @@ begin
       char3(1 to 7)<="       ";
       char3(10)<=':';
       char3(13 to 17)<="     ";
+
       char3(18)<='A' when alarm_state = ALARM_ONA else
                  'B' when alarm_state = ALARM_ONB else
                  'S' when alarm_state = SNOOZE else
@@ -169,6 +170,11 @@ begin
           end if;
         end loop;
       end loop;
+
+      characters(3, 13)<= x"3" & "00" & snooze_hour  (5 downto 4);
+      characters(3, 14)<= x"3" &        snooze_hour  (3 downto 0);
+      characters(3, 15)<= x"3" & "0"  & snooze_minute(6 downto 4);
+      characters(3, 16)<= x"3" &        snooze_minute(3 downto 0);
 --    end if;
   end process;
 
@@ -218,8 +224,8 @@ begin
                 end if;
               end if;
             end loop;
-          snooze_hour<=snooze_add_hour;
-          snooze_minute<=snooze_add_minute;
+            snooze_hour<=snooze_add_hour;
+            snooze_minute<=snooze_add_minute;
           elsif keys.kc_act_long='1' then
             alarm_state<=ALARM_OFF;
             al_on<='0';

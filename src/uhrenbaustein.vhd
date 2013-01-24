@@ -164,7 +164,7 @@ time_buffer_inst: time_buffer
   generic map(
     clock_divider => 1000,
     ignore_dcf => true,
-    reset_time => ("110", "000001", "010011", "00001", x"00", "0110111", "0000000", '0') -- Sat January 1, 2000, 13:37:00, invalid
+    reset_time => ("110", "000001", "100011", "00001", x"00", "1011001", "0000000", '0') -- Sat January 1, 2000, 13:37:00, invalid
   )
   port map(
     uni => uni,
