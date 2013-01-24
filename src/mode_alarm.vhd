@@ -117,7 +117,14 @@ begin
       char2(2 to 20)<="     Alarm:        ";
       char3(1 to 7)<="       ";
       char3(10)<=':';
-      char3(13 to 20)<="        ";
+      char3(13 to 17)<="     ";
+      char3(18)<='A' when alarm_state = ALARM_ONA else
+                 'B' when alarm_state = ALARM_ONB else
+                 'S' when alarm_state = SNOOZE else
+                 'O' when alarm_state = ALARM_OFF else
+                 ' ';
+      char3(19)<='f' when keyboard_focus = '1' else ' ';
+      char3(20)<='a' when alarm_active_int = '1' else ' ';
 -- variables 
   process(uni.clk)
   begin

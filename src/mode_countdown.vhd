@@ -121,19 +121,18 @@ begin
 		characters(3,15) <= to_unsigned(character'pos(state(2)),8);		
 		characters(3,16) <= to_unsigned(character'pos(state(1)),8);
 
-		-- debug information
-		-- characters(3,0) <= to_unsigned(40 + sec, 8);
-		-- if current_state = set then
-		-- 	characters(3, 1) <= to_unsigned(character'pos('s'),8);
-		-- elsif current_state = start then
-		-- 	characters(3, 1) <= to_unsigned(character'pos('S'),8);
-		-- elsif current_state = pause then
-		-- 	characters(3, 1) <= to_unsigned(character'pos('p'),8);
-		-- elsif current_state = beep then
-		-- 	characters(3, 1) <= to_unsigned(character'pos('b'),8);
-		-- else
-		-- 	characters(3, 1) <= to_unsigned(character'pos('?'),8);
-		-- end if;
+		characters(3,0) <= to_unsigned(40 + sec, 8);
+		if current_state = set then
+			characters(3, 1) <= to_unsigned(character'pos('s'),8);
+		elsif current_state = start then
+			characters(3, 1) <= to_unsigned(character'pos('S'),8);
+		elsif current_state = pause then
+			characters(3, 1) <= to_unsigned(character'pos('p'),8);
+		elsif current_state = beep then
+			characters(3, 1) <= to_unsigned(character'pos('b'),8);
+		else
+			characters(3, 1) <= to_unsigned(character'pos('?'),8);
+		end if;
 end process;
 
 --synchron control and counter
