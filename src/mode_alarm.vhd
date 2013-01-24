@@ -31,20 +31,24 @@ architecture behavioral of mode_alarm is
     SNOOZE,
     ALARM_OFF
   );
-  signal alarm_state    :alarm_state_t;
+  signal alarm_state      :alarm_state_t;
 
-  signal snooze_hour   :unsigned(5 downto 0);
-  signal snooze_minute :unsigned(6 downto 0);
-  signal alarm_hour    :unsigned(5 downto 0);
-  signal alarm_minute  :unsigned(6 downto 0);
+  signal snooze_hour      :unsigned(5 downto 0);
+  signal snooze_minute    :unsigned(6 downto 0);
+  signal alarm_hour       :unsigned(5 downto 0);
+  signal alarm_minute     :unsigned(6 downto 0);
 
-  signal alarm_active_int: std_logic;
+  signal alarm_active_int :std_logic;
+
+  signal char2            :string(0 to 19); -- characters line 3
+  signal char3            :string(0 to 19); -- characters line 4
+  signal hour1, hour2, min1, min2 : unsigned(7 downto 0); 
 
 begin
 
+-- Set alarm time, activate alarm
 
   process(uni.clk)
-    variable star       :character;
   begin
     if rising_edge(uni.clk) then
     -- RESET
@@ -79,23 +83,66 @@ begin
             end if;
       -- Alarm active/inactive
           elsif keys.kc_act_imp = '1' then
-            alarm_active_int <= not alarm_active_int; -- negate current value (??)
-            if alarm_active_int = '1' then
-              star:='*';
-            else
-              star:=' ';
-            end if;
+            alarm_active_int <= not alarm_active_int;
           end if;
-      -- print display output
-     --   characters(1,2,19 downto 0) <= star+"     Alarm:        "; -- display output
-        --characters(2,19 downto 0) <= "      Alarm:        "; -- display output
-        --characters(3,19 downto 0) <= " "+to_integer(alarm_hour)+":"+to_integer(alarm_minute)+" ";
         end if;
       end if;
     end if;
   end process;
 
 
+-- Prepare Variables for Display
+-- Constant
+      char2(1 to 19)<="     Alarm:        ";
+      char3(0 to 6)<="       ";
+      char3(9)<=':';
+      char3(12 to 19)<="        ";
+-- variables 
+  process(uni.clk)
+  begin
+    if(rising_edge(uni.clk))then
+      hour1<= "001100" & alarm_hour(5 downto 4);  -- concatenation: Binary 0, 
+      hour2<= "0011" & alarm_hour(3 downto 0);
+      min1<= "001100" & alarm_minute(5 downto 4);
+      min2<= "0011" & alarm_minute(3 downto 0);
+    end if;
+  end process;
+
+
+-- Print Display
+
+  process(char2, char3, hour1, hour2, min2, min1, alarm_active_int)    -- or time synchronous??
+  begin
+--    if rising_edge(uni.clk) then
+      for row in 0 to 3 loop
+        for col in 0 to 19 loop
+          if (row = 2) and (col = 0) then
+            if alarm_active_int = '1' then
+              characters(row,col) <= "00101010"; -- alarm active, print star
+            else
+              characters(row,col) <= "00100000"; -- print space
+            end if;
+          elsif (row = 2) and (col >= 1) then
+            characters(row,col) <= to_unsigned(character'pos(char2(col)), 8);
+          elsif (row = 3) and (col <= 6) then
+            characters(row,col) <= to_unsigned(character'pos(char3(col)), 8);
+          elsif (row = 3) and (col = 7) then
+            characters(row,col) <= hour1;
+          elsif (row = 3) and (col = 8) then
+            characters(row,col) <= hour2;
+          elsif (row = 3) and (col = 9) then
+            characters(row,col) <= to_unsigned(character'pos(char3(col)), 8);
+          elsif (row = 3) and (col = 10) then
+            characters(row,col) <= min1;
+          elsif (row = 3) and (col = 11) then
+            characters(row,col) <= min2;
+          elsif (row = 3) and (col >= 12) then
+            characters(row,col) <= to_unsigned(character'pos(char3(col)), 8);
+          end if;
+        end loop;
+      end loop;
+--    end if;
+  end process;
 
 -- AlarmOn FSM
   process(uni.clk)
