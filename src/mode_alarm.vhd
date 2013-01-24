@@ -40,8 +40,8 @@ architecture behavioral of mode_alarm is
 
   signal alarm_active_int :std_logic;
 
-  signal char2            :string(0 to 19); -- characters line 3
-  signal char3            :string(0 to 19); -- characters line 4
+  signal char2            :string(1 to 20); -- characters line 3
+  signal char3            :string(1 to 20); -- characters line 4
   signal hour1, hour2, min1, min2 : unsigned(7 downto 0); 
 
 begin
@@ -113,10 +113,10 @@ begin
 
 -- Prepare Variables for Display
 -- Constant
-      char2(1 to 19)<="     Alarm:        ";
-      char3(0 to 6)<="       ";
-      char3(9)<=':';
-      char3(12 to 19)<="        ";
+      char2(2 to 20)<="     Alarm:        ";
+      char3(1 to 7)<="       ";
+      char3(10)<=':';
+      char3(13 to 20)<="        ";
 -- variables 
   process(uni.clk)
   begin
@@ -143,21 +143,21 @@ begin
               characters(row,col) <= "00100000"; -- print space
             end if;
           elsif (row = 2) and (col >= 1) then
-            characters(row,col) <= to_unsigned(character'pos(char2(col)), 8);
+            characters(row,col) <= to_unsigned(character'pos(char2(col+1)), 8);
           elsif (row = 3) and (col <= 6) then
-            characters(row,col) <= to_unsigned(character'pos(char3(col)), 8);
+            characters(row,col) <= to_unsigned(character'pos(char3(col+1)), 8);
           elsif (row = 3) and (col = 7) then
             characters(row,col) <= hour1;
           elsif (row = 3) and (col = 8) then
             characters(row,col) <= hour2;
           elsif (row = 3) and (col = 9) then
-            characters(row,col) <= to_unsigned(character'pos(char3(col)), 8);
+            characters(row,col) <= to_unsigned(character'pos(char3(col+1)), 8);
           elsif (row = 3) and (col = 10) then
             characters(row,col) <= min1;
           elsif (row = 3) and (col = 11) then
             characters(row,col) <= min2;
           elsif (row = 3) and (col >= 12) then
-            characters(row,col) <= to_unsigned(character'pos(char3(col)), 8);
+            characters(row,col) <= to_unsigned(character'pos(char3(col+1)), 8);
           end if;
         end loop;
       end loop;
