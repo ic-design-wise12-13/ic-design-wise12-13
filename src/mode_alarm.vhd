@@ -60,26 +60,46 @@ begin
         if alarm_active_int='0' then
       -- set Alarm time
           if (keys.kc_enable = '1') and (keys.kc_up_dn = '0') then    -- reduce time with pulse train
-            if alarm_minute="0000000" then -- Reduce hours
-              if alarm_hour="000000" then -- go before Midnight
-                alarm_hour<="010111"; -- 23 hrs
+            if alarm_minute="0000000" then                        -- Reduce hours
+              if alarm_hour="000000" then                     -- go before Midnight
+                alarm_hour<="100011";                         -- 23 hrs
               else
-                alarm_hour<= alarm_hour;
+                if alarm_hour(3 downto 0) /=0 then
+                  alarm_hour<= alarm_hour-1;                  -- not Midnight
+                else 
+                  alarm_hour(5 downto 4) <= alarm_hour(5 downto 4) -1;
+                  alarm_hour(3 downto 0) <= "1001";
+                end if;
               end if;
-              alarm_minute<="0111011"; -- 59 minutes
+              alarm_minute<="1011001";                        -- 59 minutes
             else -- normal jump of just one minute
-              alarm_minute <= alarm_minute -1;
+              if alarm_minute(3 downto 0) /= 0 then
+                alarm_minute <= alarm_minute -1;
+              else 
+                alarm_minute(6 downto 4) <= alarm_minute(6 downto 4) -1;
+                alarm_minute(3 downto 0) <= "1001";
+              end if;
             end if;
           elsif  (keys.kc_enable = '1') and (keys.kc_up_dn = '1') then   -- increase time with pulse train
-            if alarm_minute="0111011" then -- 59 minutes
-              if alarm_hour="010111" then -- 23 hours
+            if alarm_minute="1011001" then -- 59 minutes
+              if alarm_hour="100011" then -- 23 hours
                 alarm_hour<="000000";
               else
-                alarm_hour<=alarm_hour;
+                if alarm_hour(3 downto 0) /=9 then
+                  alarm_hour<= alarm_hour+1;
+                else 
+                  alarm_hour(5 downto 4) <= alarm_hour(5 downto 4) +1;
+                  alarm_hour(3 downto 0) <= "0000";
+                end if;
               end if;
               alarm_minute<="0000000";
             else
-              alarm_minute <= alarm_minute + 1;
+              if alarm_minute(3 downto 0) /= 9 then
+                alarm_minute <= alarm_minute +1;
+              else 
+                alarm_minute(6 downto 4) <= alarm_minute(6 downto 4) +1;
+                alarm_minute(3 downto 0) <= "0000";
+              end if;
             end if;
       -- Alarm active/inactive
           elsif keys.kc_act_imp = '1' then
