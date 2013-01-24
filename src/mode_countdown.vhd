@@ -27,7 +27,8 @@ architecture behavioral of mode_countdown is
 	type int_array is array(1 downto 0) of integer range 0 to 9;
 	type int_array3 is array(3 downto 0) of integer range 0 to 9;	
 	signal cnt_reset : std_logic := '0';
-	signal counter : integer range 0 to 600000 := 0;
+	signal counter : integer range 0 to 10000 := 0;
+	signal sec, nsec : integer range 0 to 59 := 0;
 	signal current_state, next_state : timer;
 	signal char : string (1 to 80);
 	signal state, nstate : string (3 downto 1);
@@ -77,8 +78,8 @@ begin
 					dispout(2) := h(0);
 					dispout(3) := h(1);
 				elsif (m(1) = 0 and m(0) = 0 and (h(1) > 0 or h(0) > 0)) then
-					dispout(3) := 5;
-					dispout(2) := 9;
+					dispout(1) := 5;
+					dispout(0) := 9;
 					if(h(0) = 0 and h(1) > 0) then
 						dispout(3) := h(1) - 1;
 						dispout(2) := 9;					
@@ -119,13 +120,27 @@ begin
 		characters(3,14) <= to_unsigned(character'pos(state(3)),8);
 		characters(3,15) <= to_unsigned(character'pos(state(2)),8);		
 		characters(3,16) <= to_unsigned(character'pos(state(1)),8);
+
+		-- debug information
+		-- characters(3,0) <= to_unsigned(40 + sec, 8);
+		-- if current_state = set then
+		-- 	characters(3, 1) <= to_unsigned(character'pos('s'),8);
+		-- elsif current_state = start then
+		-- 	characters(3, 1) <= to_unsigned(character'pos('S'),8);
+		-- elsif current_state = pause then
+		-- 	characters(3, 1) <= to_unsigned(character'pos('p'),8);
+		-- elsif current_state = beep then
+		-- 	characters(3, 1) <= to_unsigned(character'pos('b'),8);
+		-- else
+		-- 	characters(3, 1) <= to_unsigned(character'pos('?'),8);
+		-- end if;
 end process;
 
 --synchron control and counter
 process(uni.clk) 
 begin
 	if(rising_edge(uni.clk)) then
-	
+
  		if(uni.reset = '1') then 
 			state <= "Off";
 			min(0) <= 4;
@@ -138,6 +153,7 @@ begin
 			inithour(0) <= 0;
 			initmin(1) <= 0;
 			initmin(0) <= 4;
+			sec <= 0;
 		else	
 			if (cnt_reset = '1') then 
 				counter <= 0;
@@ -148,6 +164,7 @@ begin
 			state <= nstate;
 			hour <= nhour;
 			min <= nmin;
+			sec <= nsec;
 			hour1 <= "0011" & to_unsigned(hour(1),4);	
 			hour0 <= "0011" & to_unsigned(hour(0),4);
 			min1 <= "0011" & to_unsigned(min(1),4);
@@ -159,7 +176,7 @@ begin
 end process;
 
 --next state and output
-process(current_state,next_state,keyboard_focus,keys.kc_act_imp,keys.kc_plus_imp,keys.kc_minus_imp, min, hour, nmin, nhour, counter, initmin, inithour)
+process(current_state,next_state,keyboard_focus,keys.kc_act_imp,keys.kc_enable,keys.kc_up_dn, sec, nsec, min, hour, nmin, nhour, counter, initmin, inithour)
 	variable temp : int_array3;
 begin
 case current_state is
@@ -167,6 +184,7 @@ case current_state is
 		ti_on <= '0';
 		ti_beep <= '0';
 		nstate <= "Off";
+		nsec <= 0;
 		if(keyboard_focus = '1' AND keys.kc_act_imp = '1') then 
 			nimin <= min;
 			nihour <= hour;
@@ -177,13 +195,13 @@ case current_state is
 			next_state <= current_state;
 		end if;
 		cnt_reset <= '0';
-		if (keyboard_focus = '1' AND keys.kc_plus_imp = '1') then 
+		if (keyboard_focus = '1' AND keys.kc_up_dn='1' AND keys.kc_enable='1') then --keys.kc_plus_imp = '1'
 			temp := plus(min, hour);
 			nmin(1) <= temp(1);
 			nmin(0) <= temp(0);
 			nhour(1) <= temp(3);
 			nhour(0) <= temp(2);		
-		elsif (keyboard_focus = '1' AND keys.kc_minus_imp = '1') then 
+		elsif (keyboard_focus = '1' AND keys.kc_up_dn='0' AND keys.kc_enable='1') then --keys.kc_minus_imp = '1'
 			temp := minus(min, hour);
 			nmin(1) <= temp(1);
 			nmin(0) <= temp(0);
@@ -193,7 +211,7 @@ case current_state is
 			nhour <= hour;
 			nmin <= min;
 		end if;	
-		
+
 	when start =>
 		ti_on <= '1';
 		ti_beep <= '0';
@@ -204,17 +222,25 @@ case current_state is
 			next_state <= beep;
 		else
 			next_state <= current_state;			
-		end if;		
-		if (counter < 600000) then 
-			nhour <= hour;
+		end if;	
+		if (counter < 10000) then 
+			nsec <= sec;
 			nmin <= min;
+			nhour <= hour;
 			cnt_reset <= '0';
 		else
-			temp := minus(min, hour);
-			nmin(1) <= temp(1);
-			nmin(0) <= temp(0);
-			nhour(1) <= temp(3);
-			nhour(0) <= temp(2);			
+			if(sec < 59) then
+				nsec <= sec + 1;
+				nhour <= hour;
+				nmin <= min;
+			else
+				temp := minus(min, hour);
+				nmin(1) <= temp(1);
+				nmin(0) <= temp(0);
+				nhour(1) <= temp(3);
+				nhour(0) <= temp(2);	
+				nsec <= 0;
+			end if;
 			cnt_reset <= '1';
 		end if;
 			nimin <= initmin;
@@ -222,6 +248,7 @@ case current_state is
 	when pause =>
 		ti_beep <= '0';
 		nstate <= "On ";
+		nsec <= sec;
 		if(counter < 2500) then
 			ti_on <= '1';
 			cnt_reset <= '0';
@@ -257,6 +284,7 @@ case current_state is
 		nhour <= inithour;
 		nimin <= initmin;
 		nihour <= inithour;
+		nsec <= 0;
 	when others =>
 		next_state <= set;
 		ti_on <= '0';
@@ -267,6 +295,7 @@ case current_state is
 		nmin(1) <= 0;
 		nhour(1) <= 0;
 		nhour(0) <= 0;
+		nsec <= 0;
 		nimin <= initmin;
 		nihour <= inithour;
 end case;

@@ -26,10 +26,10 @@ end mode_alarm;
 
 architecture behavioral of mode_alarm is
   type alarm_state_t is (
-    ALARM_ONA,
-    ALARM_ONB,
-    SNOOZE,
-    ALARM_OFF
+    ALARM_ONA,   -- alarm is ringing for the first time
+    ALARM_ONB,   -- alarm is ringing after a smooze period
+    SNOOZE,      -- alarm is delayed by the snooze period
+    ALARM_OFF    -- alarm is not currently ringing
   );
   signal alarm_state      :alarm_state_t;
 
@@ -55,9 +55,10 @@ begin
       if uni.reset = '1' then
         alarm_hour<="000000";
         alarm_minute<="0000111"; -- 7 minuten
+        alarm_active_int <= '0';
 
       elsif keyboard_focus = '1' then -- check keyboard focus
-        if alarm_active_int='0' then
+        if alarm_state = ALARM_OFF or alarm_state = SNOOZE then
       -- set Alarm time
           if (keys.kc_enable = '1') and (keys.kc_up_dn = '0') then    -- reduce time with pulse train
             if alarm_minute="0000000" then                        -- Reduce hours
@@ -168,9 +169,11 @@ begin
   process(uni.clk)
   begin
     if rising_edge(uni.clk) then
-      if alarm_active_int = '1' then -- check if alarm active
+      if uni.reset = '1' then
+        alarm_state <= ALARM_OFF;
+      elsif alarm_active_int = '1' then -- check if alarm active
         if alarm_state=ALARM_OFF then
-          if ((alarm_hour=ctime.hour)and(alarm_minute=ctime.minute)) then
+          if ((alarm_hour=ctime.hour)and(alarm_minute=ctime.minute)and(ctime.second=0)) then
             alarm_state<=ALARM_ONA;
             alarm_on<='1';
             al_on<='1';
