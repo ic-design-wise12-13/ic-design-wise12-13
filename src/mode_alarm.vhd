@@ -190,7 +190,7 @@ begin
                 if snooze_hour="100011" then -- 23 hrs
                   snooze_hour<="000000";
                 else
-                  if snooze_hour /=9 then
+                  if snooze_hour(3 downto 0) /= "1001" then
                     snooze_hour<=snooze_hour + 1;
                   else
                     snooze_hour(5 downto 4) <= snooze_hour(5 downto 4) +1;
@@ -199,7 +199,7 @@ begin
                 end if;
                 snooze_minute<="0000000";
               else
-                if snooze_minute(3 downto 0) /= 9 then
+                if snooze_minute(3 downto 0) /= "1001" then
                   snooze_minute <= snooze_minute +1;
                 else 
                   snooze_minute(6 downto 4) <= snooze_minute(6 downto 4) +1;
