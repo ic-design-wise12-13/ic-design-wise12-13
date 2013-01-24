@@ -55,7 +55,7 @@ begin
       elsif keyboard_focus = '1' then -- check keyboard focus
         if alarm_active_int='0' then
       -- set Alarm time
-          if keys.kc_minus_imp = '1' then
+          if (keys.kc_enable = '1') and (keys.kc_up_dn = '0') then    -- reduce time with pulse train
             if alarm_minute="0000000" then -- Reduce hours
               if alarm_hour="000000" then -- go before Midnight
                 alarm_hour<="010111"; -- 23 hrs
@@ -66,7 +66,7 @@ begin
             else -- normal jump of just one minute
               alarm_minute <= alarm_minute -1;
             end if;
-          elsif keys.kc_plus_imp = '1' then
+          elsif  (keys.kc_enable = '1') and (keys.kc_up_dn = '1') then   -- increase time with pulse train
             if alarm_minute="0111011" then -- 59 minutes
               if alarm_hour="010111" then -- 23 hours
                 alarm_hour<="000000";
