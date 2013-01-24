@@ -187,11 +187,21 @@ begin
                 if snooze_hour="010111" then -- 23 hrs
                   snooze_hour<="000000";
                 else
-                  snooze_hour<=snooze_hour + 1;
+                  if snooze_hour /=9 then
+                    snooze_hour<=snooze_hour + 1;
+                  else
+                    snooze_hour(5 downto 4) <= snooze_hour(5 downto 4) +1;
+                    snooze_hour(3 downto 0) <= "0000";
+                  end if;  
                 end if;
                 snooze_minute<="0000000";
               else
-                snooze_minute<=snooze_minute + 1;
+                if snooze_minute(3 downto 0) /= 9 then
+                  snooze_minute <= snooze_minute +1;
+                else 
+                  snooze_minute(6 downto 4) <= snooze_minute(6 downto 4) +1;
+                  snooze_minute(3 downto 0) <= "0000";
+                end if;
               end if;
             end loop;
           elsif keys.kc_act_long='1' then
