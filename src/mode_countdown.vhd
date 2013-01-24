@@ -28,7 +28,7 @@ architecture behavioral of mode_countdown is
 	type int_array3 is array(3 downto 0) of integer range 0 to 9;	
 	signal cnt_reset : std_logic := '0';
 	signal counter : integer range 0 to 10000 := 0;
-	signal sec, nsec : integer range 0 to 60 := 0;
+	signal sec, nsec : integer range 0 to 59 := 0;
 	signal current_state, next_state : timer;
 	signal char : string (1 to 80);
 	signal state, nstate : string (3 downto 1);
@@ -120,6 +120,20 @@ begin
 		characters(3,14) <= to_unsigned(character'pos(state(3)),8);
 		characters(3,15) <= to_unsigned(character'pos(state(2)),8);		
 		characters(3,16) <= to_unsigned(character'pos(state(1)),8);
+
+		-- debug information
+		-- characters(3,0) <= to_unsigned(40 + sec, 8);
+		-- if current_state = set then
+		-- 	characters(3, 1) <= to_unsigned(character'pos('s'),8);
+		-- elsif current_state = start then
+		-- 	characters(3, 1) <= to_unsigned(character'pos('S'),8);
+		-- elsif current_state = pause then
+		-- 	characters(3, 1) <= to_unsigned(character'pos('p'),8);
+		-- elsif current_state = beep then
+		-- 	characters(3, 1) <= to_unsigned(character'pos('b'),8);
+		-- else
+		-- 	characters(3, 1) <= to_unsigned(character'pos('?'),8);
+		-- end if;
 end process;
 
 --synchron control and counter
@@ -211,9 +225,11 @@ case current_state is
 		end if;	
 		if (counter < 10000) then 
 			nsec <= sec;
+			nmin <= min;
+			nhour <= hour;
 			cnt_reset <= '0';
 		else
-			if(sec < 60) then
+			if(sec < 59) then
 				nsec <= sec + 1;
 				nhour <= hour;
 				nmin <= min;
@@ -227,25 +243,12 @@ case current_state is
 			end if;
 			cnt_reset <= '1';
 		end if;
---		if(sec < 60) then
---		--if (counter < 600000) then 
---			nhour <= hour;
---			nmin <= min;
---			cnt_reset <= '0';
---		else
---			temp := minus(min, hour);
---			nmin(1) <= temp(1);
---			nmin(0) <= temp(0);
---			nhour(1) <= temp(3);
---			nhour(0) <= temp(2);			
---			cnt_reset <= '1';
---		end if;
 			nimin <= initmin;
 			nihour <= inithour;		
 	when pause =>
 		ti_beep <= '0';
 		nstate <= "On ";
-		nsec <= nsec;
+		nsec <= sec;
 		if(counter < 2500) then
 			ti_on <= '1';
 			cnt_reset <= '0';
