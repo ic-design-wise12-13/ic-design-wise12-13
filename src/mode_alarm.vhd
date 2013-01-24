@@ -187,8 +187,8 @@ begin
             alarm_state<=SNOOZE;
             alarm_on<='0';
             al_on<='0';
-            snooze_add_hour := snooze_add_hour;
-            snooze_add_minute := snooze_add_minute;
+            snooze_add_hour := snooze_hour;
+            snooze_add_minute := snooze_minute;
             for i in 0 to 4 loop -- add 1 minute five times
               if snooze_add_minute="1011001" then -- 59 mins
                 if snooze_add_hour="100011" then -- 23 hrs
