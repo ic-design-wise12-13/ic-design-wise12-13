@@ -46,7 +46,9 @@ package main_pkg is
 	-- component that maintains its own clock and synchronizes it to the DCT signal if it's valid
 	component time_buffer is
 		generic(
-			clock_divider: natural := 10000 -- number of clock ticks in one second
+			clock_divider: natural := 10000; -- number of clock ticks in one second
+			ignore_dcf: boolean := false; -- whether we should ignore incoming DCF signals (to better test the alarm snooze function)
+			reset_time: time_signals := ("110", "000001", "000000", "00001", x"00", "0000000", "0000000", '0') -- Sat January 1, 2000, 00:00:00, invalid
 		);
 		port(
 			uni:               in  universal_signals;
