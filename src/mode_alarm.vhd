@@ -186,8 +186,8 @@ begin
             alarm_on<='0';
             al_on<='0';
             for i in 0 to 4 loop -- add 1 minute five times
-              if snooze_minute="0111011" then -- 59 mins
-                if snooze_hour="010111" then -- 23 hrs
+              if snooze_minute="1011001" then -- 59 mins
+                if snooze_hour="100011" then -- 23 hrs
                   snooze_hour<="000000";
                 else
                   if snooze_hour /=9 then
