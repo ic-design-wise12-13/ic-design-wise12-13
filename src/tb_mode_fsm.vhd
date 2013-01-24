@@ -5,10 +5,10 @@
   USE ieee.numeric_std.ALL;
   USE work.main_pkg.ALL;
 
-  ENTITY testbench_fsm IS
-  END testbench_fsm;
+  ENTITY tb_mode_fsm IS
+  END tb_mode_fsm;
 
-  ARCHITECTURE behavior OF testbench_fsm IS 
+  ARCHITECTURE behavior OF tb_mode_fsm IS 
 
   -- Component Declaration
           COMPONENT mode_fsm
