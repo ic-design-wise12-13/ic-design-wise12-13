@@ -295,7 +295,8 @@ signal, the stored time is incremented. If an increment causes the second to
 overflow from 59 back to 0, the stored valid bit is reset. An RTL diagram can be seen in figure~\ref{time_buffer_block}.
 
 \begin{figure}
-	\begin{center}
+	\centering
+	\begin{minipage}{11cm}
 		\begin{tikzpicture}
 			\node[rectangle,draw=black,minimum height=0.75cm,minimum width=4cm,above right] at (0,-1) {+ 1 s, valid <= 0};
 			\node[rectangle,draw=black,minimum height=2.75cm,minimum width=1cm,above right] at (2,-4) {};
@@ -336,9 +337,22 @@ overflow from 59 back to 0, the stored valid bit is reset. An RTL diagram can be
 			\draw (3,-4.75) +(0.173205,0) -- +(0,-.2) -- +(-0.173205,0);
 
 		\end{tikzpicture}
-	\end{center}
-	\caption{Internal implementation of the time buffer module}
-	\label{time_buffer_block}
+		\caption{Internal implementation of the time buffer module}
+		\label{time_buffer_block}
+	\end{minipage}
+	\begin{minipage}{5cm}
+\begin{verbatim}
+6=16-02-27T00:00:00
+7=16-02-28T00:00:00
+1=16-02-29T00:00:00
+2=16-03-01T00:00:00
+3=16-03-02T00:00:00
+4=16-03-03T00:00:00
+5=16-03-04T00:00:00
+\end{verbatim}
+		\caption{Example output of time\_buffer testbench}
+		\label{time_buffer_text}
+	\end{minipage}
 \end{figure}
 
 A simple asynchronous ripple carry adder is used to compute the value of the
@@ -355,7 +369,18 @@ A counter is used to count the clock ticks that passed since the last update of
 the date/time register, and the appropriate action is taken based on this
 counter and the values of the valid and reset inputs.
 
+The number of clock ticks that makes for a full second is configurable through
+a generic (defaults to $10000$) to make the testbenches run faster and the
+waveforms more compact.
+
 \subsection{Testing strategy}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{time_buffer_timing.png}
+	\caption{Timing diagrams of interesting parts of the logic test bench. Note that the clock divider has been set to 4.}
+	\label{time_buffer_timing}
+\end{figure}
 
 Since there are so many special cases to be considered when dealing with time
 and date arithmetic, a test bench was created that prints out the current time
@@ -367,6 +392,20 @@ Both versions of the test bench were run to create one secondly log file
 containing a couple of days' worth of data, and one daily log file containing
 all dates in the 21st century. A simple PHP script was written to create the
 same data using PHP's built-in time and date functions, and the results were
-compared using the UNIX diff tool.
+compared using the UNIX diff tool. See figure~\ref{time_buffer_text} for an
+excerpt of the generated output.
+
+To test the logic that does not involve the time incrementer, another version
+of the test bench tests known corner cases, comparing the time\_out port to the
+expected value after each clock cycle. See figure~\ref{time_buffer_timing} for
+some interesting waveforms. Tests include:
+
+\begin{itemize}
+	\item reset behavior
+	\item ``normal'' second counting after a reset
+	\item feeding a valid clock signal at a full minute
+	\item feeding a valid clock signal at another time than the full minute
+	\item proper handling of day overflow in February
+\end{itemize}
 
 \end{document}
