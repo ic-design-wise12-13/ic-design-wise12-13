@@ -65,12 +65,8 @@ begin
               if alarm_hour="000000" then                     -- go before Midnight
                 alarm_hour<="100011";                         -- 23 hrs
               else
-                if alarm_hour(3 downto 0) /=0 then
-                  alarm_hour<= alarm_hour-1;                  -- not Midnight
-                else 
-                  alarm_hour(5 downto 4) <= alarm_hour(5 downto 4) -1;
-                  alarm_hour(3 downto 0) <= "1001";
-                end if;
+                alarm_hour(5 downto 4) <= alarm_hour(5 downto 4) -1;
+                alarm_hour(3 downto 0) <= "1001";
               end if;
               alarm_minute<="1011001";                        -- 59 minutes
             else -- normal jump of just one minute
@@ -86,7 +82,7 @@ begin
               if alarm_hour="100011" then -- 23 hours
                 alarm_hour<="000000";
               else
-                if alarm_hour(3 downto 0) /=9 then
+                if alarm_hour(3 downto 0) /="1001" then
                   alarm_hour<= alarm_hour+1;
                 else 
                   alarm_hour(5 downto 4) <= alarm_hour(5 downto 4) +1;
@@ -95,7 +91,7 @@ begin
               end if;
               alarm_minute<="0000000";
             else
-              if alarm_minute(3 downto 0) /= 9 then
+              if alarm_minute(3 downto 0) /= "1001" then
                 alarm_minute <= alarm_minute +1;
               else 
                 alarm_minute(6 downto 4) <= alarm_minute(6 downto 4) +1;
