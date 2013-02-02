@@ -26,8 +26,7 @@ end mode_alarm;
 
 architecture behavioral of mode_alarm is
   type alarm_state_t is (
-    ALARM_ONA,   -- alarm is ringing for the first time
-    ALARM_ONB,   -- alarm is ringing after a smooze period
+    ALARM_RING,   -- alarm is ringing
     SNOOZE,      -- alarm is delayed by the snooze period
     ALARM_OFF    -- alarm is not currently ringing
   );
@@ -172,13 +171,13 @@ begin
       elsif alarm_active_int = '1' then -- check if alarm active
         if alarm_state=ALARM_OFF then
           if ((alarm_hour=ctime.hour)and(alarm_minute=ctime.minute)and(ctime.second=0)) then
-            alarm_state<=ALARM_ONA;
+            alarm_state<=ALARM_RING;
             alarm_on<='1';
             al_on<='1';
             snooze_hour<=alarm_hour;
             snooze_minute<=alarm_minute;
           end if;
-        elsif (alarm_state=ALARM_ONA) or (alarm_state=ALARM_ONB) then
+        elsif (alarm_state=ALARM_RING) then
           if keys.kc_act_imp='1' then
             alarm_state<=SNOOZE;
             alarm_on<='0';
@@ -220,7 +219,7 @@ begin
           end if;
         elsif alarm_state=SNOOZE then
           if (snooze_hour=ctime.hour)and(snooze_minute=ctime.minute) then
-            alarm_state<=ALARM_ONB;
+            alarm_state<=ALARM_RING;
             al_on<='1';
             alarm_on<='1';
           end if;
