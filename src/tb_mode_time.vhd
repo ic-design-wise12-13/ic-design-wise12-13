@@ -5,10 +5,10 @@
   USE ieee.numeric_std.ALL;
   use work.main_pkg.all;
 
-  ENTITY testbench_time IS
-  END testbench_time;
+  ENTITY tb_mode_time IS
+  END tb_mode_time;
 
-  ARCHITECTURE behavior OF testbench_time IS 
+  ARCHITECTURE behavior OF tb_mode_time IS 
 
   -- Component Declaration
   --        COMPONENT mode_time

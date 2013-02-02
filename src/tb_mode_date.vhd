@@ -5,10 +5,10 @@
   USE ieee.numeric_std.ALL;
   use work.main_pkg.all;
 
-  ENTITY testbench IS
-  END testbench;
+  ENTITY tb_mode_date IS
+  END tb_mode_date;
 
-  ARCHITECTURE behavior OF testbench IS 
+  ARCHITECTURE behavior OF tb_mode_date IS 
 
  --input
  SIGNAL uni :  universal_signals := (others => '0');

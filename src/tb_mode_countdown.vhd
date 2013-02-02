@@ -53,7 +53,7 @@ ARCHITECTURE behavior OF tb_mode_countdown IS
 BEGIN
  
 	-- Instantiate the Unit Under Test (UUT)
-   uut: countdown PORT MAP (
+   uut: mode_countdown PORT MAP (
 			 uni => uni,
 			 keys => keys,
           keyboard_focus => keyboard_focus,
