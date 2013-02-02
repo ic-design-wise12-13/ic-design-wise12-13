@@ -42,7 +42,7 @@ ARCHITECTURE behavior OF tb_mode_countdown IS
    --Inputs
 	signal uni: universal_signals := (others => '0');
 	signal keys: keypad_signals := (others => '0');
-   signal keyboard_focus : std_logic_vector(3 downto 0) := (others => '0');
+   signal keyboard_focus : std_logic; -- _vector(3 downto 0) := (others => '0');
 
  	--Outputs
 	signal characters: character_array_2d(3 downto 0, 19 downto 0);
@@ -81,7 +81,7 @@ BEGIN
 		wait for 100 us;
 		uni.reset <= '0';
 		wait for 100 us;
-		keyboard_focus <= "0001";		
+		keyboard_focus <= '1'; --"0001";		
 		wait for 100 us;
 		keys.kc_plus_imp <= '1';
 		wait for 100 us;
@@ -97,7 +97,7 @@ BEGIN
 		keys.kc_minus_imp <= '0';	
 		
 		wait for 100 us;
-		keyboard_focus <= "0010";		
+		keyboard_focus <= '0'; --"0010";		
 
 		wait for 100 us;
 		keys.kc_minus_imp <= '1';
@@ -110,7 +110,7 @@ BEGIN
 		keys.kc_minus_imp <= '0';	
 		
 		wait for 100 us;
-		keyboard_focus <= "0001";	
+		keyboard_focus <= '1'; --"0001";	
 
 		wait for 100 us;
 		keys.kc_minus_imp <= '1';
