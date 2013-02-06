@@ -42,7 +42,7 @@ signal all_char               :character_array_3d_HACK(num_modes - 1 downto 0);
 signal time_char              :character_array_2d( 3 downto 0, 19 downto 0);
 signal m_date_char            :character_array_2d( 3 downto 0, 19 downto 0);
 signal m_alarm_char           :character_array_2d( 3 downto 0, 19 downto 0);
-signal m_countdown_char       :character_array_2d( 3 downto 0, 19 downto 0);
+signal m_cdown_char       :character_array_2d( 3 downto 0, 19 downto 0);
 signal display_char           :character_array_2d( 3 downto 0, 19 downto 0);
 signal keyboard_focus         :unsigned( (num_modes-1) downto 0);
 
@@ -50,11 +50,11 @@ signal keyboard_focus         :unsigned( (num_modes-1) downto 0);
 begin
 su_on <= '0';    -- set unused variable to 0
 
-process(m_countdown_char, m_alarm_char, m_date_char, time_char)
+process(m_cdown_char, m_alarm_char, m_date_char, time_char)
 begin
 	for row in 0 to 3 loop
 		for col in 0 to 19 loop
-			all_char(0)(row, col) <= m_countdown_char(row, col);  -- put display outputs together
+			all_char(0)(row, col) <= m_cdown_char(row, col);  -- put display outputs together
 			all_char(1)(row, col) <= m_alarm_char(row, col);
 			all_char(2)(row, col) <= m_date_char(row, col);
 			all_char(3)(row, col) <= time_char(row, col);
@@ -129,7 +129,7 @@ mode_countdown_inst: mode_countdown
     uni => uni,
     keys => keys,
     keyboard_focus => keyboard_focus(0),
-    characters => m_countdown_char,
+    characters => m_cdown_char,
     ti_on => ti_on,
     ti_beep => ti_beep
  );
