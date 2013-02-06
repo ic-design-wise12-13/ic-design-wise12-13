@@ -111,29 +111,40 @@ The output \texttt{su\_on} is set to zero, since the stop watch module is not im
   \begin{center}
     \begin{tikzpicture}
       \label{uhrenbaustein_char}
-    %  \draw[help lines] (0, -10) grid (15, 2);
+   %   \draw[help lines] (0, -10) grid (15, 2);
 
-      \node [rectangle, draw=black, minimum height= 2cm, minimum width = 4cm, above left] at (4, -2) {mode\_time};
+      \node [rectangle, draw=black, minimum height= 1.5cm, minimum width = 3.5cm, above left] at (4, -2) {mode\_countdown};
       \node [above left] at (4, -2) {characters[3:0;19:0]};
 
-      \node [rectangle, draw=black, minimum height= 2cm, minimum width = 4cm, above left] at (4, -5) {mode\_date};
-      \node [above left] at (4, -5) {characters[3:0;19:0]};
+      \node [rectangle, draw=black, minimum height= 1.5cm, minimum width = 3.5cm, above left] at (4, -3.75) {mode\_alarm};
+      \node [above left] at (4, -3.75) {characters[3:0;19:0]};
 
-      \node [rectangle, draw=black, minimum height= 2cm, minimum width = 4cm, above left] at (4, -8) {mode\_alarm};
-      \node [above left] at (4, -8) {characters[3:0;19:0]};
+      \node [rectangle, draw=black, minimum height= 1.5cm, minimum width = 3.5cm, above left] at (4, -5.5) {mode\_date};
+      \node [above left] at (4, -5.5) {characters[3:0;19:0]};
 
-      \node [rectangle, draw=black, minimum height= 2cm, minimum width = 4cm, above left] at (4, -11) {mode\_countdown};
-      \node [above left] at (4, -11) {characters[3:0;19:0]};
-
-
-
-      \draw[->] (4, -1.75) --(6, -1.75) --(6.2, -5.5)->(6.5, -5.5);
-      \draw[->] (4, -4.75) --(6, -4.75) --(6.2, -5.5)->(6.5, -5.5);
-      \draw[->] (4, -7.75) --(6, -7.75) --(6.2, -5.5)->(6.5, -5.5);
-      \draw[->] (4, -10.75)--(6, -10.75)--(6.2, -5.5)->(6.5, -5.5);
+      \node [rectangle, draw=black, minimum height= 1.5cm, minimum width = 3.5cm, above left] at (4, -7.25) {mode\_time};
+      \node [above left] at (4, -7.25) {characters[3:0;19:0]};
 
 
 
+      \draw[->] (4, -1.75) --(6.6, -1.75) --(7, -2.5)->(8.5, -2.5);
+      \node [above right] at (4, -1.8) {m\_cdown\_char};
+      \draw[-] (4, -3.5) --(6.6, -3.5) --(7, -2.5);
+      \node [above right] at (4, -3.55) {m\_alarm\_char}; 
+      \draw[-] (4, -5.25) --(6.4, -5.25) --(7, -2.5);
+      \node [above right] at (4, -5.3) {m\_date\_char};
+      \draw[-] (4, -7)--(6.6, -7)--(7, -2.5);
+      \node [above right] at (4, -7.05) {time\_char};
+      \node [above left] at (8.5, -2.55) {all\_char};
+
+      \node [rectangle, draw=black, minimum height= 2cm, minimum width = 5cm, above left] at (13.5, -4.25) {display\_mux};
+      \node [below right] at (8.45, -2.2) {module\_characters[3:0;3:0;19:0]};
+      \node [above left] at (13.5, -4.25) {characters[3:0;19:0]};
+
+      \draw [->] (13.5, -4) -> (15.75, -4);
+      \node [above left] at (15.75, -4.05) {display\_char};
+
+      \node [rectangle, draw=black, minimum height=2cm, below right] at (15.75,-3.75) {display\_driver};
 
 %      \draw[line width=2pt,->] (-1, -0.5) -> (0, -0.5) node[right] { enable\_gen };
 %      \draw[line width=2pt,->] (-1, -1.5) -> (0, -1.5) node[right] { dcf77\_eval };
@@ -152,7 +163,7 @@ The output \texttt{su\_on} is set to zero, since the stop watch module is not im
 %      \draw (0,0) rectangle (6, -5);
     \end{tikzpicture}
   \end{center}
-  \caption{Block diagram of uhrenbaustein}
+  \caption{Block diagram of Uhrenbaustein}
 \end{figure}
 
 
