@@ -68,9 +68,9 @@
 
       \node[above] at (3,0) {uhrenbaustein};
 
-      \draw[line width=2pt,->] (-1, -0.5) -> (0, -0.5) node[right] { enable\_gen };
-      \draw[line width=2pt,->] (-1, -1.5) -> (0, -1.5) node[right] { dcf77\_eval };
-      \draw[line width=2pt,->] (-1, -2.5) -> (0, -2.5) node[right] { key\_control };
+      \draw[line width=2pt,->] (-1, -0.5) -> (0, -0.5) node[right] { dcf77\_eval };
+      \draw[line width=2pt,->] (-1, -1.5) -> (0, -1.5) node[right] { key\_control };
+      \draw[line width=2pt,->] (-1, -2.5) -> (0, -2.5) node[right] { enable\_gen };
 
       \draw[->] (6,-0.5)node[left] {d\_en}   -- ++(2, 0);
       \draw[->] (6,-1)  node[left] {d\_rw}   -- ++(2, 0);
@@ -88,6 +88,92 @@
   \caption{Block diagram of uhrenbaustein}
 \end{figure}
 
+
+\begin{figure}
+  \begin{center}
+    \begin{tikzpicture}[x=1cm,y=1cm,font=\small]
+      % top level module
+      \node at (7,0.25) {uhrenbaustein};
+      \draw[black] (-.75,0) rectangle (8.5, -6.5);
+
+      % individual modules
+      \node[rectangle,draw=black,minimum height=0.6cm,minimum width=1.80cm,above right] at (0,-.75) {time\_buffer};
+      \node[rectangle,draw=black,minimum height=0.6cm,minimum width=2.5cm,above right] at (.9,-1.75) {countdown};
+      \node[rectangle,draw=black,minimum height=0.6cm,minimum width=2.5cm,above right] at (.9,-2.5) {alarm};
+      \node[rectangle,draw=black,minimum height=0.6cm,minimum width=2.5cm,above right] at (.9,-3.25) {date};
+      \node[rectangle,draw=black,minimum height=0.6cm,minimum width=2.5cm,above right] at (.9,-4) {time};
+      \node[rectangle,draw=black,minimum height=0.6cm,minimum width=1.80cm,above left] at (8.3,-2.875) {display\_driver};
+      \node[rectangle,draw=black,minimum height=0.6cm,minimum width=3.00cm,above right] at (2.5,-5.875) {mode\_fsm};
+       % mux
+      \draw (5,-1.45) -- (5.5, -1.75) -- (5.5,-3.5) -- (5,-3.8) -- cycle;
+      \node[rotate=90] at (5.25,-2.67) {display\_mux};
+
+      % time signals
+      \draw[red!29!black,line width=1pt,->] (-1,-.625) -- (0,-.625);
+      \draw[red!29!black,line width=1pt,->] (.5,-1.25) -> (.9,-1.25);
+      \draw[red!29!black,line width=1pt,->] (.5,-2) -> (.9,-2);
+      \draw[red!29!black,line width=1pt,->] (.5,-2.75) -> (.9,-2.75);
+      \draw[red!29!black,line width=1pt,->] (.5,-.75) -- (.5,-3.5) -> (.9,-3.5);
+      \node[rectangle,above left] at (-1,-.875) {dcf77\_eval};
+
+      % key status signals
+      \draw[green!29!black,line width=1pt,->] (-.25,-1.45)-> (.9,-1.45);
+      \draw[green!29!black,line width=1pt,->] (-.25,-2.2) -> (.9,-2.2);
+      \draw[green!29!black,line width=1pt,->] (-.25,-2.95) -> (.9,-2.95);
+      \draw[green!29!black,line width=1pt,->] (-.25,-3.7) -> (.9,-3.7);
+      \draw[green!29!black,line width=1pt,->] (-1,-1.45) -- (-.25,-1.45) -- (-.25,-5.5) -> (2.5,-5.5);
+      \node[rectangle,above left] at (-1,-1.7) {key\_control};
+
+      % enable_gen
+      \draw[white!29!black,line width=1pt,->] (.125,-6.25) --(.125,-1.65)-> (.9,-1.65);
+      \draw[white!29!black,line width=1pt,->] (.125,-2.4) -> (.9,-2.4);
+      \draw[white!29!black,line width=1pt,->] (.125,-3.15) -> (.9,-3.15);
+      \draw[white!29!black,line width=1pt,->] (.125,-3.9) -> (.9,-3.9);
+      \draw[white!29!black,line width=1pt,->] (-1,-6.25) -- (6.5,-6.25) -> (6.5,-2.87);
+      \node[rectangle,above left] at (-1,-6.5) {enable\_gen};
+
+      % display data signals
+      \draw[->] (3.4,-1.45) -- (4.2, -1.45) --(4.2,-2.57) -> (5,-2.57);
+      \draw (3.4,-2.2) -- (4.2, -2.2);
+      \draw (3.4,-2.95) -- (4.2, -2.95);
+      \draw (3.4,-3.7) -- (4.2, -3.7) -- (4.2,-2.57);
+
+      % status signals modules -> fsm
+      \draw[->] (3.4,-2.35) -- (3.8,-2.35) -> (3.8,-5.25);
+
+      % control signals fsm -> modules
+      \draw[->] (3.6,-5.25) -- (3.6,-2.5) -> (3.4,-2.5);
+      \draw[->] (3.6,-2.5) -- (3.6,-1.75) -> (3.4,-1.75);
+      % fsm -> mux
+      \draw[->] (5.25,-5.25) -> (5.25,-3.65);
+      % mus -> display_driver
+      \draw[->] (5.5,-2.57) -> (6,-2.57);
+
+      % Output signals
+      \draw[blue!49!black,->](3.4,-1.15) --(3.6,-1.15)--(3.6, -0.25)-> (10, -0.25);
+      \node[above right] at (10,-0.55){ti\_on};
+      \draw[blue!49!black,->](3.4,-1.3) --(3.8,-1.3)--(3.8, -0.75)-> (10, -0.75);
+      \node[above right] at (10, -1.05){ti\_beep};
+      \draw[blue!49!black,->](3.4,-2.05) --(4,-2.05)--(4, -1.25)-> (10, -1.25);
+      \node[above right] at (10, -1.55){al\_on};
+      \node[rectangle,draw=black,above left] at (8.3,-2) {su\_on<='0'};
+      \draw[blue!49!black,->] (8.3,-1.75) -> (10,-1.75);
+      \node[above right] at (10,-2.05){su\_on};
+
+      % Output display
+      \draw[blue!49!black,line width=1pt,->] (8.3,-2.625) -- (9,-2.625) -- (9, -4.125) -> (10, -4.125);
+      \draw[->] (9, -2.625) ++(0,-.2) -- ++(.2,.2) -- ++(.8, 0) node[right] {d\_en};
+      \draw[->] (9, -3.125) ++(0,-.2) -- ++(.2,.2) -- ++(.8, 0) node[right] {d\_rw};
+      \draw[->] (9, -3.625) ++(0,-.2) -- ++(.2,.2) -- ++(.8, 0) node[right] {d\_rs};
+      \node[above right] at (10, -4.375){d\_data};
+
+   \end{tikzpicture}
+  \end{center}
+  \caption{Entity and components of uhrenbaustein}
+\end{figure}
+
+
+
 In the top level-module Uhrenbaustein the inputs and outputs are supplied to all the submodules.
 Besides general information like reset and the clock, this includes characters for the display, the current time and which modul currently reacts to the key input.
 
@@ -97,19 +183,20 @@ Besides general information like reset and the clock, this includes characters f
 The module Display Mux receives the display output as a three dimentsional array.
 This three dimensional array is generated from the two dimensional outputs of the mudules in uhrenbaustein.
 Display Mux then generates a two dimensional array for the display driver.
-How the different signals for the display are handed through can be seen in% \ref{uhrenbaustein_char}.
+How the different signals for the display are handed through can be seen in \ref{uhrenbaustein_char}.
 
 The signals from the DCF77 transmitter are only handed to the Time Buffer module. All other modules receive their time signal (\texttt{ctime}) from this module.
 
 The Mode FSM module receives all key inputs as well as the information if the alarm is currently ringing. 
 From this information it decides, which module is currently active and reacts to the key input. 
-It outputs a vector that is split into separate signals in Uhrenbaustein, \texttt{'1'} indicating that the module receiving this \texttt{keyboard\_focus} signal is active% (\ref{uhrenbaustein_time}).
+It outputs a vector that is split into separate signals in Uhrenbaustein, \texttt{'1'} indicating that the module receiving this \texttt{keyboard\_focus} signal is active (\ref{uhrenbaustein_key}).
 
 The output \texttt{su\_on} is set to zero, since the stop watch module is not implemented.
 
 \begin{figure}
   \begin{center}
-    \begin{tikzpicture}
+    \begin{tikzpicture}[x=1cm,y=1cm,font=\small]
+
       \label{uhrenbaustein_char}
    %   \draw[help lines] (0, -10) grid (15, 2);
 
@@ -127,13 +214,13 @@ The output \texttt{su\_on} is set to zero, since the stop watch module is not im
 
 
 
-      \draw[->] (4, -1.75) --(6.6, -1.75) --(7, -2.5)->(8.5, -2.5);
+      \draw[->] (4, -1.75) --(6.75, -1.75) --(6.75, -2.5)->(8.5, -2.5);
       \node [above right] at (4, -1.8) {m\_cdown\_char};
-      \draw[-] (4, -3.5) --(6.6, -3.5) --(7, -2.5);
+      \draw[-] (4, -3.5) --(6.75, -3.5) --(6.75, -2.5);
       \node [above right] at (4, -3.55) {m\_alarm\_char}; 
-      \draw[-] (4, -5.25) --(6.4, -5.25) --(7, -2.5);
+      \draw[-] (4, -5.25) --(6.75, -5.25) --(6.75, -2.5);
       \node [above right] at (4, -5.3) {m\_date\_char};
-      \draw[-] (4, -7)--(6.6, -7)--(7, -2.5);
+      \draw[-] (4, -7)--(6.75, -7)--(6.75, -2.5);
       \node [above right] at (4, -7.05) {time\_char};
       \node [above left] at (8.5, -2.55) {all\_char};
 
@@ -146,56 +233,42 @@ The output \texttt{su\_on} is set to zero, since the stop watch module is not im
 
       \node [rectangle, draw=black, minimum height=2cm, below right] at (15.75,-3.75) {display\_driver};
 
-%      \draw[line width=2pt,->] (-1, -0.5) -> (0, -0.5) node[right] { enable\_gen };
-%      \draw[line width=2pt,->] (-1, -1.5) -> (0, -1.5) node[right] { dcf77\_eval };
-%      \draw[line width=2pt,->] (-1, -2.5) -> (0, -2.5) node[right] { key\_control };
-
-%      \draw[->] (6,-0.5)node[left] {d\_en}   -- ++(2, 0);
-%      \draw[->] (6,-1)  node[left] {d\_rw}   -- ++(2, 0);
-%      \draw[->] (6,-1.5)node[left] {d\_rs}   -- ++(2, 0);
-%      \draw[line width=2pt,->] (6,-2) node[left] {d\_data} -- ++(2, 0);
-%
-%      \draw[->] (6,-3)  node[left] {al\_on} -- ++(2, 0);
-%      \draw[->] (6,-3.5)node[left] {su\_on} -- ++(2, 0);
-%      \draw[->] (6,-4)  node[left] {ti\_on} -- ++(2, 0);
-%      \draw[->] (6,-4.5)node[left] {ti\_beep} -- ++(2, 0);
-
-%      \draw (0,0) rectangle (6, -5);
     \end{tikzpicture}
   \end{center}
-  \caption{Block diagram of Uhrenbaustein}
+  \caption{Signals for the display}
 \end{figure}
 
 
 \begin{figure}
   \begin{center}
     \begin{tikzpicture}
-      \label{uhrenbaustein_time}
-%      \draw[help lines] (-2, -8) grid (7, 2);
+      \label{uhrenbaustein_key}
+      %\draw[help lines] (0, -10) grid (15, 2);
 
-      \node[above] at (3,0) {uhrenbaustein};
+      \node [rectangle, draw=black, minimum height= 1.5cm, minimum width = 3.5cm, above left] at (4, -2) {mode\_FSM};
+      \node [above left] at (4, -2) {keyboard\_focus[3:0]};
 
-      \draw[line width=2pt,->] (-1, -0.5) -> (0, -0.5) node[right] { enable\_gen };
-      \draw[line width=2pt,->] (-1, -1.5) -> (0, -1.5) node[right] { dcf77\_eval };
-      \draw[line width=2pt,->] (-1, -2.5) -> (0, -2.5) node[right] { key\_control };
 
-      \draw[->] (6,-0.5)node[left] {d\_en}   -- ++(2, 0);
-      \draw[->] (6,-1)  node[left] {d\_rw}   -- ++(2, 0);
-      \draw[->] (6,-1.5)node[left] {d\_rs}   -- ++(2, 0);
-      \draw[line width=2pt,->] (6,-2) node[left] {d\_data} -- ++(2, 0);
+      \draw[-] (4, -1.75) --(5,-1.75);
+      \draw[->] (5, -1.75) --(5,-0.25)    ->(6, -0.25);
+      \draw[->] (5, -1.75) --(5,-2.25) ->(6,-2.25);
 
-      \draw[->] (6,-3)  node[left] {al\_on} -- ++(2, 0);
-      \draw[->] (6,-3.5)node[left] {su\_on} -- ++(2, 0);
-      \draw[->] (6,-4)  node[left] {ti\_on} -- ++(2, 0);
-      \draw[->] (6,-4.5)node[left] {ti\_beep} -- ++(2, 0);
+      \node [rectangle, draw=black, minimum height= 1.5cm, minimum width = 3.5cm, below right] at (6, 0) {mode\_alarm};
+      \node [rectangle, draw=black, minimum height= 1.5cm, minimum width = 3.5cm, below right] at (6, -2) {mode\_countdown};
 
-      \draw (0,0) rectangle (6, -5);
+      \node [below right] at (6, 0) {keyboard\_focus};
+      \node [below right] at (6,-2) {keyboard\_focus};
+
     \end{tikzpicture}
   \end{center}
-  \caption{Block diagram of uhrenbaustein}
+  \caption{Signals for the display}
 \end{figure}
+\subsection{Testing strategy}
 
-
+\section{Mode Alarm}
+  \subsection{Overview}
+  \subsection{Implementation}
+  \subsection{Testing strategy}
 
 
 \end{document}
