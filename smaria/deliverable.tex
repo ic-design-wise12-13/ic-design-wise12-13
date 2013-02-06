@@ -93,7 +93,7 @@
   \begin{center}
     \begin{tikzpicture}[x=1cm,y=1cm,font=\small]
       % top level module
-      \node at (7,0.25) {uhrenbaustein};
+      \node at (4,0.25) {uhrenbaustein};
       \draw[black] (-.75,0) rectangle (8.5, -6.5);
 
       % individual modules
@@ -265,9 +265,84 @@ The output \texttt{su\_on} is set to zero, since the stop watch module is not im
 \end{figure}
 \subsection{Testing strategy}
 
+
 \section{Mode Alarm}
   \subsection{Overview}
+\begin{figure}
+  \begin{center}
+    \begin{tikzpicture}
+      %\draw[help lines] (-2, -6) grid (4, 2);
+
+      \node[above] at (3,1) {mode\_alarm};
+
+      \draw[line width=2pt,->] (-1, -0.25) |- (0, 0.5) node[right] { uni };
+
+      \draw (-1,  0.5) ++(0,-.2) -- ++(-.2,.2) -- ++(-.8, 0) node[left] {clk};
+      \draw (-1,  0)   ++(0,-.2) -- ++(-.2,.2) -- ++(-.8, 0) node[left] {reset};
+
+      \draw[line width=2pt,->] (-1, -2.75) |- (0, -1.0) node[right] { keys };
+
+      \draw (-1, -1.0) ++(0,-.2) -- ++(-.2,.2) -- ++(-.8, 0) node[left] {kc\_enable};
+      \draw (-1, -1.5) ++(0,-.2) -- ++(-.2,.2) -- ++(-.8, 0) node[left] {kc\_up\_dn};
+      \draw (-1, -2.0) ++(0,-.2) -- ++(-.2,.2) -- ++(-.8, 0) node[left] {kc\_act\_imp};
+      \draw (-1, -2.5) ++(0,-.2) -- ++(-.2,.2) -- ++(-.8, 0) node[left] {kc\_act\_long};
+
+      \draw[line width=2pt,->] (-1, -4.75) |- (0, -3.5) node[right] { ctime };
+
+      \draw (-1, -3.5) ++(0,-.2) -- ++(-.2,.2) -- ++(-.8, 0) node[left] {hour};
+      \draw (-1, -4.0) ++(0,-.2) -- ++(-.2,.2) -- ++(-.8, 0) node[left] {second};
+      \draw (-1, -4.5) ++(0,-.2) -- ++(-.2,.2) -- ++(-.8, 0) node[left] {minute};
+
+      \draw[line width=2pt] (7, -1.25) |- (6, .5) node[left] { time\_out };
+
+      \draw[->] (7,  .5) ++(0,-.2) -- ++(.2,.2) -- ++(.8, 0) node[right] {characters};
+      \draw[->] (7,   0) ++(0,-.2) -- ++(.2,.2) -- ++(.8, 0) node[right] {alarm\_active};
+      \draw[->] (7, -.5) ++(0,-.2) -- ++(.2,.2) -- ++(.8, 0) node[right] {alarm\_on};
+      \draw[->] (7,  -1) ++(0,-.2) -- ++(.2,.2) -- ++(.8, 0) node[right] {al\_on};
+
+      \draw (0,1) rectangle (6, -5);
+    \end{tikzpicture}
+  \end{center}
+  \caption{Block diagram of mode alarm}
+\end{figure}
+
   \subsection{Implementation}
+\begin{figure}
+  \begin{center}
+    \begin{tikzpicture}[every state/.style={text width=2.5cm,align=center,node distance=.5cm},auto]
+      \node[state,                              minimum size=3cm](AlarmOn)  { ALARM ON   \\ al\_on = 1 \\ alarm\_on = 1};               
+      \node[state,below=of AlarmOn,xshift=-4cm,yshift=-1cm, minimum size=3cm](Snooze)   { SNOOZE     \\ al\_on = 0 \\ alarm\_on = 0};
+      \node[state,below=of AlarmOn,xshift=4cm,yshift=-1cm,minimum size=3cm](AlarmOff) { ALARM OFF  \\ al\_on = 0 \\ alarm\_on = 0 \\ };
+
+
+      \path[->] (AlarmOn)     edge             node[rotate=-50, shift={(-1,0)}] {kc\_act\_long}               (AlarmOff)
+                (AlarmOn)     edge[bend right] node[rotate=-50, shift={(-.7,0)}] { >1min}                     (AlarmOff)
+                (AlarmOff)    edge[bend right] node[rotate=-50, shift={(2.25,.5)}] {alarm\_time=current\_time}(AlarmOn)
+                (Snooze)      edge[bend left]  node[rotate= 50, shift={(1.7,0)}] {snooze=current\_time}       (AlarmOn)
+                (AlarmOn)     edge[bend left]  node[rotate= 50, shift={(-1,0)}] {kc\_act\_imp}                (Snooze);
+ 
+
+
+    \end{tikzpicture}
+  \caption{FSM mode alarm}
+  \end{center}
+\end{figure}
+
+When the alarm is active, mode alarm can be in three states:
+  \begin{itemize}
+    \item Alarm on
+    \item Snooze
+    \item Alarm off
+  \end{itemize}
+When the \texttt{ALARM ON} state is entered from the state \texttt{ALARM OFF}, 
+the signals \texttt{snooze\_hour} and \texttt{snooze\_minute} are set to the current alarm time. 
+These signals are then used to start the alarm again in the \texttt{SNOOZE} state. 
+Every time this state is entered, the snooze time is increased by five minutes. 
+This is implemented with the same ripple carrier adder that is used to set the alarm time.
+Two variables run through it five times, then \texttt{snooze\_hour} and \texttt{snooze\_minute} 
+are set to their values. 
+This solution was chosen to avoid careless mistakes when implementing the five minute ripple carrier adder.
+
   \subsection{Testing strategy}
 
 
