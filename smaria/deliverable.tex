@@ -334,6 +334,128 @@ When the alarm is active, mode alarm can be in three states:
     \item Snooze
     \item Alarm off
   \end{itemize}
+
+   \begin{tikzpicture}[align=center,font=\small,node distance=.5cm,auto]
+      %input signals
+      \node[above left] at (.25,-1.1){kc\_act\_imp};
+      \draw[green!50!black,line width=2pt,->] (-0.5,-1) -- (1.5,-1);
+      \node[above right] at (2,-1.85){0};
+      \draw[black,line width=1pt,->] (2,-1.75) -> (3.5,-1.75);
+      \node[above left] at (.25, -3.1){reset};
+      \draw[gray,line width=2pt,->] (-0.5,-3) -- (3.75,-3) -> (3.75,-2.25);
+
+      %internal signals
+      \draw[black,line width=1pt,->](3,-.75) -> (3.5,-.75);
+      \draw[black,line width=1pt,->](4,-1.25) -> (5,-1.25);
+
+      %+/-
+      \node[rectangle,draw=black,minimum height=1cm,minimum width=1.5cm,above right] at (1.5,-1.25) {NOT};
+      %mux
+      \draw (3.5,0) -- (4,-.5) -- (4,-2) -- (3.5,-2.5)--cycle;
+      \node[above right] at (3.5,-1){0};
+      \node[above right] at (3.5,-2){1};
+      %register
+      \node[rectangle,draw=black,minimum height=2.5cm,minimum width=2.25cm,above right] at (5,-2.5) {alarm\_active};
+      \node[red,above right] at (5,-.5){R};    
+      \draw (6.75,-2.5)--(6.875,-2.325) -- (7,-2.5);
+
+      %output
+      \draw[blue!70!black,line width=2pt,->] (7.25,-1.25) -> (8.5,-1.25);
+      \draw[blue!70!black,line width=2pt,->] (7.5,-1.25) -- (7.5,.75) -- (1,.75) -- (1,-0.5) -> (1.5,-0.5); 
+
+    \end{tikzpicture}
+
+    \begin{tikzpicture}[align=center,font=\small,node distance=.5cm,auto]
+      %input signals
+      \node[above left] at (.25,-.1){kc\_enable};
+      \draw[green!50!black,line width=2pt,->] (-0.5,0) -- (0.5,0);
+      \node[above left] at (.25,-1.1){kc\_up\_dn};
+      \draw[green!50!black,line width=2pt,->] (-0.5,-1) -- (0.5,-1);
+      \node[above right] at (2,-1.85){00:07};
+      \draw[black,line width=1pt,->] (2,-1.75) -> (3.5,-1.75);
+      \node[above left] at (.25, -3.1){reset};
+      \draw[gray,line width=2pt,->] (-0.5,-3) -- (3.75,-3) -> (3.75,-2.25);
+
+      %internal signals
+      \draw[black,line width=1pt,->](3,-.75) -> (3.5,-.75);
+      \draw[black,line width=1pt,->](4,-1.25) -> (5,-1.25);
+
+      %+/-
+      \node[rectangle,draw=black,minimum height=1.5cm,minimum width=2.5cm,above right] at (.5,-1.25) {+/- ripple carry};
+      %mux
+      \draw (3.5,0) -- (4,-.5) -- (4,-2) -- (3.5,-2.5)--cycle;
+      \node[above right] at (3.5,-1){0};
+      \node[above right] at (3.5,-2){1};
+      %register
+      \node[rectangle,draw=black,minimum height=2.5cm,minimum width=2.25cm,above right] at (5,-2.5) {alarm\_time};
+      \node[red,above right] at (5,-.5){R};
+      \draw (6.75,-2.5)--(6.875,-2.325) -- (7,-2.5);
+
+      %output
+      \draw[blue!70!black,line width=2pt,->] (7.25,-1.25) -> (8.5,-1.25);
+      \draw[blue!70!black,line width=2pt,->] (7.5,-1.25) -- (7.5,.75) -- (2,.75) -> (2,0.2);
+
+    \end{tikzpicture}
+
+   \begin{tikzpicture}[align=center,font=\small,node distance=.5cm,auto]
+%       \draw[red] (-3,3) rectangle (9,-4);
+
+    % main modules
+      \node[rectangle,draw=black,minimum height=1.5cm,minimum width=2.25cm,above right] at (0.5,1.25) {Alarm active};
+      \node[rectangle,draw=black,minimum height=1.5cm,minimum width=2.25cm,above right] at (0.5,-2) {Alarm time};
+      \node[rectangle,draw=black,minimum height=1cm,minimum width=2cm,above right] at (5.25,0) {AlarmOn FSM};
+      % compare
+      \draw (3,0) -- (3.5, -.5) -- (3,-1) -- cycle;
+      % AND 
+      \node[rectangle,draw=black,minimum height=0.5cm,minimum width=1cm,above right] at (4,0.25) {AND};
+
+      % basic connections
+      \draw[->] (2.75,2)  -- (3.75,2) -- (3.75,0.65) -> (4,0.65);
+      \draw[->] (2.75,-0.75) -> (3,-0.75);
+      \draw[->] (3.5, -0.5) -- (3.75,-0.5) -- (3.75, 0.4) -> (4,0.4);
+      \draw[->] (5, 0.5) -> (5.25, 0.5);
+
+      % input
+      \node[above left] at (.25,2.65){kc\_act\_imp};
+      \draw[green!50!black,line width=2pt,->] (-0.5,2.75) -- (0.5,2.75);
+      \node[above left] at (.25,2.15){key\_focus};
+      \draw[black,line width=2pt,->] (-0.5,2.25) -- (0.5,2.25);
+     %\node[above left] at (.25, 1.65){key\_focus};
+     %\draw[red!50!black,line width=2pt,->] (-0.5,1.75) -- (0.5,1.75);
+      \node[above left] at (.25, 1.15){reset};
+      \draw[gray,line width=2pt,->] (-0.5,1.25) -- (0.5,1.25);
+
+
+      \node[above left] at (0.25,0){current\_time};
+      \draw[red!50!black,line width=2pt,->] (-0.5, 0) -- (2.75,0) -- (2.75,-.25) -> (3,-.25);
+
+      \node[above left] at (.25,-.6){kc\_enable};
+      \draw[green!50!black,line width=2pt,->] (-0.5,-.5) -- (0.5,-.5);
+      \node[above left] at (.25,-1.1){kc\_up\_dn};
+      \draw[green!50!black,line width=2pt,->] (-0.5,-1) -- (0.5,-1);
+      \node[above left] at (.25, -1.6){key\_focus};
+      \draw[black!50!black,line width=2pt,->] (-0.5,-1.5) -- (0.5,-1.5);
+      \node[above left] at (.25, -2.1){reset};
+      \draw[gray,line width=2pt,->] (-0.5,-2) -- (0.5,-2);
+
+      % output
+      \node[above left] at (9.5,0.15){al\_on};
+      \draw[blue!50!black,line width=2pt,->] (7.75,0.75) -> (9.5,0.75);
+      \node[above left] at (9.5,0.65){alarm\_on};
+      %\draw[blue!30!white,line width=2pt,->] (7.85,0.75) -- (7.85,3.5) -- (1,3.5) -> (1,2.75);
+      %\draw[blue!30!white,line width=2pt,->] (8,0.75) -- (8,-2.5) -- (1,-2.5) -> (1,-2);
+
+      \draw[blue!50!black,line width=2pt,->] (7.75,0.25) -> (9.5,0.25);
+
+
+
+    \end{tikzpicture}
+
+
+
+
+
+
 When the \texttt{ALARM ON} state is entered from the state \texttt{ALARM OFF}, 
 the signals \texttt{snooze\_hour} and \texttt{snooze\_minute} are set to the current alarm time. 
 These signals are then used to start the alarm again in the \texttt{SNOOZE} state. 
