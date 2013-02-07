@@ -28,7 +28,10 @@ signal day1, day2, mon1, mon2, year1, year2 : unsigned(7 downto 0);
 begin
 
 -- constant assignment of character output:
-char(1 to 80) <= "                                               Date:                    " & '/' & "  " & '/' & "    ";
+char(1 to 80) <= "                    "
+               & "                    "
+               & "       Date:        "
+               & "          -  -      ";
 
 process(char, ndow, day1,day2,mon1,mon2,year1,year2)
 begin
@@ -41,17 +44,17 @@ characters(row,col) <= to_unsigned(character'pos(ndow(2)),8);
 elsif(row = 3 AND col = 6) then	
 characters(row,col) <= to_unsigned(character'pos(ndow(3)),8);
 elsif(row = 3 AND col = 8) then	
-characters(row,col) <= day1;
+characters(row,col) <= year1;
 elsif(row = 3 AND col = 9) then	
-characters(row,col) <= day2;
+characters(row,col) <= year2;
 elsif(row = 3 AND col = 11) then	
 characters(row,col) <= mon1;
 elsif(row = 3 AND col = 12) then	
 characters(row,col) <= mon2;
 elsif(row = 3 AND col = 14) then	
-characters(row,col) <= year1;
+characters(row,col) <= day1;
 elsif(row = 3 AND col = 15) then	
-characters(row,col) <= year2;
+characters(row,col) <= day2;
 else
 characters(row, col) <= to_unsigned(character'pos(char(20*row + col + 1)), 8);
 end if;
