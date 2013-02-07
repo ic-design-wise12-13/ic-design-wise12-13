@@ -57,15 +57,20 @@ begin
         alarm_active_int <= '0';
 
       elsif keyboard_focus = '1' then -- check keyboard focus
+        -- set alarm time
         if alarm_state = ALARM_OFF or alarm_state = SNOOZE then
-      -- set Alarm time
-          if (keys.kc_enable = '1') and (keys.kc_up_dn = '0') then    -- reduce time with pulse train
+
+          --reduce time with pulse train
+          if (keys.kc_enable = '1') and (keys.kc_up_dn = '0') then
             if alarm_minute="0000000" then                        -- Reduce hours
               if alarm_hour="000000" then                     -- go before Midnight
                 alarm_hour<="100011";                         -- 23 hrs
               else
-                alarm_hour(5 downto 4) <= alarm_hour(5 downto 4) -1;
-                alarm_hour(3 downto 0) <= "1001";
+                if (alarm_hour(3 downto 0) = "0000") then
+                  alarm_hour(5 downto 4) <= alarm_hour(5 downto 4) -1;
+                  alarm_hour(3 downto 0) <= "1001";
+                else
+                  alarm_hour(3 downto 0) <= alarm_hour(3 downto 0) -1;
               end if;
               alarm_minute<="1011001";                        -- 59 minutes
             else -- normal jump of just one minute
@@ -76,7 +81,8 @@ begin
                 alarm_minute(3 downto 0) <= "1001";
               end if;
             end if;
-          elsif  (keys.kc_enable = '1') and (keys.kc_up_dn = '1') then   -- increase time with pulse train
+          -- increase time with pulse train
+          elsif  (keys.kc_enable = '1') and (keys.kc_up_dn = '1') then
             if alarm_minute="1011001" then -- 59 minutes
               if alarm_hour="100011" then -- 23 hours
                 alarm_hour<="000000";
@@ -119,7 +125,7 @@ begin
     if(rising_edge(uni.clk))then
       hour1<= "001100" & alarm_hour(5 downto 4);  -- concatenation: Binary 0, 
       hour2<= "0011" & alarm_hour(3 downto 0);
-      min1<= "001100" & alarm_minute(5 downto 4);
+      min1<= "001100" & alarm_minute(6 downto 4);
       min2<= "0011" & alarm_minute(3 downto 0);
     end if;
   end process;
