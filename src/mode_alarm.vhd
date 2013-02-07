@@ -70,15 +70,16 @@ begin
                   alarm_hour(5 downto 4) <= alarm_hour(5 downto 4) -1;
                   alarm_hour(3 downto 0) <= "1001";
                 else
-                  alarm_hour(3 downto 0) <= alarm_hour(3 downto 0) -1;
+                  alarm_hour(3 downto 0) <= alarm_hour -1;
+                end if;
               end if;
               alarm_minute<="1011001";                        -- 59 minutes
             else -- normal jump of just one minute
-              if alarm_minute(3 downto 0) /= 0 then
-                alarm_minute <= alarm_minute -1;
-              else 
+              if alarm_minute(3 downto 0) = "0000" then
                 alarm_minute(6 downto 4) <= alarm_minute(6 downto 4) -1;
                 alarm_minute(3 downto 0) <= "1001";
+              else
+                alarm_minute <= alarm_minute -1;
               end if;
             end if;
           -- increase time with pulse train
@@ -125,7 +126,7 @@ begin
     if(rising_edge(uni.clk))then
       hour1<= "001100" & alarm_hour(5 downto 4);  -- concatenation: Binary 0, 
       hour2<= "0011" & alarm_hour(3 downto 0);
-      min1<= "001100" & alarm_minute(6 downto 4);
+      min1<= "00110" & alarm_minute(6 downto 4);
       min2<= "0011" & alarm_minute(3 downto 0);
     end if;
   end process;
