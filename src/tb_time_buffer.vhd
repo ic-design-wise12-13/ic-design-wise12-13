@@ -12,7 +12,7 @@ entity tb_time_buffer is
 end entity;
 
 architecture behavioral of tb_time_buffer is
-	constant clock_divider: natural := 4;
+	constant clock_divider: natural := 10000;
 	constant clock_period: time := 1 sec / clock_divider;
 
 	signal uni:      universal_signals;

@@ -162,11 +162,11 @@ mode_time_inst: mode_time
 
 time_buffer_inst: time_buffer
   -- uncomment the following lines for easy testing of alarm functionality
-  -- generic map(
-  --   clock_divider => 1000,
-  --   ignore_dcf => true,
-  --   reset_time => ("110", "000001", "010011", "00001", x"00", "0110111", "0000000", '0') -- Sat January 1, 2000, 13:37:00, invalid
-  -- )
+  generic map(
+    clock_divider => 1000,
+    ignore_dcf => true,
+    reset_time => ("110", "000001", "010011", "00001", x"00", "0110111", "0000000", '0') -- Sat January 1, 2000, 13:37:00, invalid
+  )
   port map(
     uni => uni,
     time_in =>  dcf_time,
