@@ -70,7 +70,7 @@ begin
                   alarm_hour(5 downto 4) <= alarm_hour(5 downto 4) -1;
                   alarm_hour(3 downto 0) <= "1001";
                 else
-                  alarm_hour(3 downto 0) <= alarm_hour -1;
+                  alarm_hour <= alarm_hour -1;
                 end if;
               end if;
               alarm_minute<="1011001";                        -- 59 minutes
