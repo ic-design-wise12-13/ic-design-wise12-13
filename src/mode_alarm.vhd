@@ -32,8 +32,7 @@ architecture behavioral of mode_alarm is
   );
   signal alarm_state      :alarm_state_t;
 
-  signal snooze_hour      :unsigned(5 downto 0);
-  signal snooze_minute    :unsigned(6 downto 0);
+  signal snooze_counter   :unsigned(8 downto 0);
   signal alarm_hour       :unsigned(5 downto 0);
   signal alarm_minute     :unsigned(6 downto 0);
 
@@ -169,21 +168,22 @@ begin
 
 -- AlarmOn FSM
   process(uni.clk)
-  variable snooze_add_hour    :unsigned (5 downto 0);
-  variable snooze_add_minute  :unsigned (6 downto 0);
   begin
     if rising_edge(uni.clk) then
+ --     if uni.enable_1='1' then
+      if uni.enable_50='1' then
+        snooze_counter<=snooze_counter+1;
+      end if;
       if uni.reset = '1' then
         alarm_state <= ALARM_OFF;
       --elsif alarm_active_int = '1' then -- check if alarm active
       elsif alarm_state=ALARM_OFF then
         if alarm_active_int = '1' then -- check if alarm active
-          if ((alarm_hour=ctime.hour)and(alarm_minute=ctime.minute)and(ctime.second=0)) then
+          if ((alarm_hour=ctime.hour)and(alarm_minute=ctime.minute) and(ctime.second=0)) then
             alarm_state<=ALARM_RING;
             alarm_on<='1';
             al_on<='1';
-            snooze_hour<=alarm_hour;
-            snooze_minute<=alarm_minute;
+            snooze_counter<= "000000000";  --start counting to stop alarm after 1minute
           end if;
         end if;
       elsif (alarm_state=ALARM_RING) then
@@ -191,43 +191,19 @@ begin
           alarm_state<=SNOOZE;
           alarm_on<='0';
           al_on<='0';
-          snooze_add_hour := snooze_hour;
-          snooze_add_minute := snooze_minute;
-          for i in 0 to 4 loop -- add 1 minute five times
-            if snooze_add_minute="1011001" then -- 59 mins
-              if snooze_add_hour="100011" then -- 23 hrs
-                snooze_add_hour:="000000";
-              else
-                if snooze_add_hour(3 downto 0) /= "1001" then
-                  snooze_add_hour:=snooze_add_hour + 1;
-                else
-                  snooze_add_hour(5 downto 4) := snooze_add_hour(5 downto 4) +1;
-                  snooze_add_hour(3 downto 0) := "0000";
-                end if;  
-              end if;
-              snooze_add_minute:="0000000";
-            else
-              if snooze_add_minute(3 downto 0) /= "1001" then
-                snooze_add_minute := snooze_add_minute +1;
-              else 
-                snooze_add_minute(6 downto 4) := snooze_add_minute(6 downto 4) +1;
-                snooze_add_minute(3 downto 0) := "0000";
-              end if;
-            end if;
-          end loop;
-          snooze_hour<=snooze_add_hour;
-          snooze_minute<=snooze_add_minute;
+          snooze_counter <= "000000000"; -- start counting snooze time from 0 to 299s
         elsif keys.kc_act_long='1' then
           alarm_state<=ALARM_OFF;
           al_on<='0';
           alarm_on<='0';
-        elsif snooze_minute/=ctime.minute then -- now about one minute should have passed
+
+        elsif snooze_counter = 59 then -- one minute passed
           alarm_state<=ALARM_OFF;
           al_on<='0';
           alarm_on<='0';
         end if;
       elsif alarm_state=SNOOZE then
-        if (snooze_hour=ctime.hour)and(snooze_minute=ctime.minute) then
+        if snooze_counter = 299 then
           alarm_state<=ALARM_RING;
           al_on<='1';
           alarm_on<='1';
