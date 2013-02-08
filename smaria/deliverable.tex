@@ -346,23 +346,26 @@ The output \texttt{su\_on} is set to zero, since the stop watch module is not im
 
       \node[above] at (3,1) {mode\_alarm};
 
-      \draw[line width=2pt,->] (-1, -0.25) |- (0, 0.5) node[right] { uni };
+      \draw[line width=2pt,->] (-1, -0.75) |- (0, 0.5) node[right] { uni };
 
       \draw (-1,  0.5) ++(0,-.2) -- ++(-.2,.2) -- ++(-.8, 0) node[left] {clk};
       \draw (-1,  0)   ++(0,-.2) -- ++(-.2,.2) -- ++(-.8, 0) node[left] {reset};
+      \draw (-1,  -.5)   ++(0,-.2) -- ++(-.2,.2) -- ++(-.8, 0) node[left] {enable\_1};
 
-      \draw[line width=2pt,->] (-1, -2.75) |- (0, -1.0) node[right] { keys };
 
-      \draw (-1, -1.0) ++(0,-.2) -- ++(-.2,.2) -- ++(-.8, 0) node[left] {kc\_enable};
-      \draw (-1, -1.5) ++(0,-.2) -- ++(-.2,.2) -- ++(-.8, 0) node[left] {kc\_up\_dn};
-      \draw (-1, -2.0) ++(0,-.2) -- ++(-.2,.2) -- ++(-.8, 0) node[left] {kc\_act\_imp};
-      \draw (-1, -2.5) ++(0,-.2) -- ++(-.2,.2) -- ++(-.8, 0) node[left] {kc\_act\_long};
 
-      \draw[line width=2pt,->] (-1, -4.75) |- (0, -3.5) node[right] { ctime };
+      \draw[line width=2pt,->] (-1, -3.25) |- (0, -1.5) node[right] { keys };
 
-      \draw (-1, -3.5) ++(0,-.2) -- ++(-.2,.2) -- ++(-.8, 0) node[left] {hour};
-      \draw (-1, -4.0) ++(0,-.2) -- ++(-.2,.2) -- ++(-.8, 0) node[left] {second};
-      \draw (-1, -4.5) ++(0,-.2) -- ++(-.2,.2) -- ++(-.8, 0) node[left] {minute};
+      \draw (-1, -1.5) ++(0,-.2) -- ++(-.2,.2) -- ++(-.8, 0) node[left] {kc\_enable};
+      \draw (-1, -2.0) ++(0,-.2) -- ++(-.2,.2) -- ++(-.8, 0) node[left] {kc\_up\_dn};
+      \draw (-1, -2.5) ++(0,-.2) -- ++(-.2,.2) -- ++(-.8, 0) node[left] {kc\_act\_imp};
+      \draw (-1, -3.0) ++(0,-.2) -- ++(-.2,.2) -- ++(-.8, 0) node[left] {kc\_act\_long};
+
+      \draw[line width=2pt,->] (-1, -5.25) |- (0, -4.0) node[right] { ctime };
+
+      \draw (-1, -4.0) ++(0,-.2) -- ++(-.2,.2) -- ++(-.8, 0) node[left] {hour};
+      \draw (-1, -4.5) ++(0,-.2) -- ++(-.2,.2) -- ++(-.8, 0) node[left] {second};
+      \draw (-1, -5.0) ++(0,-.2) -- ++(-.2,.2) -- ++(-.8, 0) node[left] {minute};
 
       \draw[line width=2pt] (7, -1.25) |- (6, .5) node[left] { time\_out };
 
@@ -371,7 +374,7 @@ The output \texttt{su\_on} is set to zero, since the stop watch module is not im
       \draw[->] (7, -.5) ++(0,-.2) -- ++(.2,.2) -- ++(.8, 0) node[right] {alarm\_on};
       \draw[->] (7,  -1) ++(0,-.2) -- ++(.2,.2) -- ++(.8, 0) node[right] {al\_on};
 
-      \draw (0,1) rectangle (6, -5);
+      \draw (0,1) rectangle (6, -5.5);
     \end{tikzpicture}
   \end{center}
   \caption{Block diagram of mode alarm}
