@@ -16,9 +16,9 @@ entity mode_alarm is
     keyboard_focus      :in  std_logic;
 -- output, mode_alarm is 1 ??
     characters          :out character_array_2d(3 downto 0, 19 downto 0);
-    alarm_active        :out std_logic;
+    alarm_active        :out std_logic; -- this output signal is not used by anyone
 -- alarm is ringing
-    alarm_on            :out std_logic;
+    alarm_on            :out std_logic;    -- this signal is not neccesary since it is always the same as al_on
 -- alarm LED
     al_on               :out std_logic
   );
@@ -54,6 +54,7 @@ begin
         alarm_hour<="000000";
         alarm_minute<="0000111"; -- 7 minuten
         alarm_active_int <= '0';
+        -- should also include resetting the state machine?
 
       elsif keyboard_focus = '1' then -- check keyboard focus
         -- set alarm time
