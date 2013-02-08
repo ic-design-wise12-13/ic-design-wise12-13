@@ -255,7 +255,8 @@ The signals from the DCF77 transmitter are only handed to the Time Buffer module
 
 The Mode FSM module receives all key inputs as well as the information if the alarm is currently ringing. 
 From this information it decides, which module is currently active and reacts to the key input. 
-It outputs a vector that is split into separate signals in Uhrenbaustein, \texttt{'1'} indicating that the module receiving this \texttt{keyboard\_focus} signal is active (\ref{uhrenbaustein_key}).
+It outputs a vector \texttt{keyboard\_focus[3:0]} that is split into separate signals in Uhrenbaustein, \texttt{'1'} indicating that the module receiving this \texttt{keyboard\_focus} signal is active (\ref{uhrenbaustein_key}).
+The module Display mux receives the full vector \texttt{keyboard\_focus[3:0]}, from which it decides which output from the modules is printed on the display.
 
 The output \texttt{su\_on} is set to zero, since the stop watch module is not implemented.
 
@@ -309,25 +310,29 @@ The output \texttt{su\_on} is set to zero, since the stop watch module is not im
   \begin{center}
     \begin{tikzpicture}
       \label{uhrenbaustein_key}
-      %\draw[help lines] (0, -10) grid (15, 2);
+    %  \draw[help lines] (0, -10) grid (15, 2);
 
-      \node [rectangle, draw=black, minimum height= 1.5cm, minimum width = 3.5cm, above left] at (4, -2) {mode\_FSM};
-      \node [above left] at (4, -2) {keyboard\_focus[3:0]};
+      \node [rectangle, draw=black, minimum height= 1.5cm, minimum width = 3.5cm, above left] at (3, -2.5) {mode\_FSM};
+      \node [above left] at (3, -2.5) {keyboard\_focus[3:0]};
 
 
-      \draw[-] (4, -1.75) --(5,-1.75);
-      \draw[->] (5, -1.75) --(5,-0.25)    ->(6, -0.25);
-      \draw[->] (5, -1.75) --(5,-2.25) ->(6,-2.25);
+      \draw[-] (3, -1.75) --(9,-1.75);
+      \draw[->] (9, -1.75) --(9,-0.25)    ->(9.5, -0.25);
+      \draw[->] (9, -1.75) --(9,-2.25) ->(9.5,-2.25);
+      \draw[->] (4, -1.75) -- (4, -.25) -> (4.5, -.25);
 
-      \node [rectangle, draw=black, minimum height= 1.5cm, minimum width = 3.5cm, below right] at (6, 0) {mode\_alarm};
-      \node [rectangle, draw=black, minimum height= 1.5cm, minimum width = 3.5cm, below right] at (6, -2) {mode\_countdown};
+      \node [rectangle, draw=black, minimum height= 1.5cm, minimum width = 3.5cm, below right] at (9.5, 0) {mode\_alarm};
+      \node [rectangle, draw=black, minimum height= 1.5cm, minimum width = 3.5cm, below right] at (9.5, -2) {mode\_countdown};
+      \node [rectangle, draw=black, minimum height= 1.5cm, minimum width = 3.5cm, below right] at (4.5, 0) {display\_mux};
 
-      \node [below right] at (6, 0) {keyboard\_focus};
-      \node [below right] at (6,-2) {keyboard\_focus};
+
+      \node [below right] at (9.5, 0) {keyboard\_focus};
+      \node [below right] at (9.5,-2) {keyboard\_focus};
+      \node [below right] at (4.5, 0) {keyboard\_focus[3:0]};
 
     \end{tikzpicture}
   \end{center}
-  \caption{Signals for the display}
+  \caption{Keyboard Focus signal}
 \end{figure}
 \subsection{Testing strategy}
 
