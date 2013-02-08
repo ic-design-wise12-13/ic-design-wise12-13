@@ -49,6 +49,72 @@
 \fancyhead{}
 \fancyfoot{}
 \renewcommand{\headrulewidth}{0pt}
+
+
+
+
+
+\begin{center}
+
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lr}
+  \textbf{Lehrstuhl für Integrierte Systeme} & \textbf{Technische Universität München} \\
+  \includegraphics[height=1cm]{lis_logo.png} &
+  \begin{tikzpicture}[x=0.2cm,y=0.2cm]
+    \definecolor{tum}{rgb}{0,0.396078,0.741176}
+    \fill[fill=tum]
+          (0,5)
+       -- (0,4)
+       -- (1,4)
+       -- (1,0)
+       -- (2,0)
+       -- (2,4)
+       -- (3,4)
+       -- (3,0)
+       -- (6,0)
+       -- (6,4)
+       -- (7,4)
+       -- (7,0)
+       -- (8,0)
+       -- (8,4)
+       -- (9,4)
+       -- (9,0)
+       -- (10,0)
+       -- (10,5)
+       -- (5,5)
+       -- (5,1)
+       -- (4,1)
+       -- (4,5)
+       -- cycle;
+  \end{tikzpicture}
+\end{tabular*}
+
+\vfill
+
+\huge{Project Lab IC-Design}
+
+\huge{Projektpraktikum IC-Entwurf}
+
+\large{Winter Semester 2012/13}
+
+\vfill
+
+\huge\textbf{Group 3}
+
+\large\textit{Sophia Schillai, Fabian Achatz, Tobias Fülle, Mathias Plichta}
+
+\vfill
+
+\huge{\textbf{Deliverable}}
+
+\large\textit{Sophia Schillai}
+
+\vfill
+
+\end{center}
+\newpage
+
+
+\renewcommand{\headrulewidth}{0pt}
 \setlength{\parskip}{6pt}
 \renewcommand{\headrulewidth}{.4pt}
 \fancyhead[r]{Sophia Schillai, group 3}
@@ -60,33 +126,33 @@
 
 \subsection{Overview}
 
-\begin{figure}
-  \begin{center}
-    \begin{tikzpicture}
-      \label{uhrenbaustein_overview}
+%\begin{figure}
+%  \begin{center}
+%    \begin{tikzpicture}
+%      \label{uhrenbaustein_overview}
 %      \draw[help lines] (-2, -8) grid (7, 2);
 
-      \node[above] at (3,0) {uhrenbaustein};
+%      \node[above] at (3,0) {uhrenbaustein};
 
-      \draw[line width=2pt,->] (-1, -0.5) -> (0, -0.5) node[right] { dcf77\_eval };
-      \draw[line width=2pt,->] (-1, -1.5) -> (0, -1.5) node[right] { key\_control };
-      \draw[line width=2pt,->] (-1, -2.5) -> (0, -2.5) node[right] { enable\_gen };
+ %     \draw[line width=2pt,->] (-1, -0.5) -> (0, -0.5) node[right] { dcf77\_eval };
+ %     \draw[line width=2pt,->] (-1, -1.5) -> (0, -1.5) node[right] { key\_control };
+ %     \draw[line width=2pt,->] (-1, -2.5) -> (0, -2.5) node[right] { enable\_gen };
 
-      \draw[->] (6,-0.5)node[left] {d\_en}   -- ++(2, 0);
-      \draw[->] (6,-1)  node[left] {d\_rw}   -- ++(2, 0);
-      \draw[->] (6,-1.5)node[left] {d\_rs}   -- ++(2, 0);
-      \draw[line width=2pt,->] (6,-2) node[left] {d\_data} -- ++(2, 0);
+ %     \draw[->] (6,-0.5)node[left] {d\_en}   -- ++(2, 0);
+ %     \draw[->] (6,-1)  node[left] {d\_rw}   -- ++(2, 0);
+ %     \draw[->] (6,-1.5)node[left] {d\_rs}   -- ++(2, 0);
+ %     \draw[line width=2pt,->] (6,-2) node[left] {d\_data} -- ++(2, 0);
 
-      \draw[->] (6,-3)  node[left] {al\_on} -- ++(2, 0);
-      \draw[->] (6,-3.5)node[left] {su\_on} -- ++(2, 0);
-      \draw[->] (6,-4)  node[left] {ti\_on} -- ++(2, 0);
-      \draw[->] (6,-4.5)node[left] {ti\_beep} -- ++(2, 0);
+ %     \draw[->] (6,-3)  node[left] {al\_on} -- ++(2, 0);
+ %     \draw[->] (6,-3.5)node[left] {su\_on} -- ++(2, 0);
+ %     \draw[->] (6,-4)  node[left] {ti\_on} -- ++(2, 0);
+ %     \draw[->] (6,-4.5)node[left] {ti\_beep} -- ++(2, 0);
 
-      \draw (0,0) rectangle (6, -5);
-    \end{tikzpicture}
-  \end{center}
-  \caption{Block diagram of uhrenbaustein}
-\end{figure}
+%      \draw (0,0) rectangle (6, -5);
+%    \end{tikzpicture}
+%  \end{center}
+%  \caption{Block diagram of uhrenbaustein}
+%\end{figure}
 
 
 \begin{figure}
