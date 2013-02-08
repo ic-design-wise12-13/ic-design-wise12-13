@@ -392,7 +392,7 @@ The output \texttt{su\_on} is set to zero, since the stop watch module is not im
       \path[->] (AlarmOn)     edge             node[rotate=-50, shift={(-1,0)}] {kc\_act\_long}               (AlarmOff)
                 (AlarmOn)     edge[bend right] node[rotate=-50, shift={(-.7,0)}] { >1min}                     (AlarmOff)
                 (AlarmOff)    edge[bend right] node[rotate=-50, shift={(2.25,.5)}] {alarm\_time=current\_time}(AlarmOn)
-                (Snooze)      edge[bend left]  node[rotate= 50, shift={(1.7,0)}] {snooze=current\_time}       (AlarmOn)
+                (Snooze)      edge[bend left]  node[rotate= 50, shift={(.7,0)}] {>5min}                       (AlarmOn)
                 (AlarmOn)     edge[bend left]  node[rotate= 50, shift={(-1,0)}] {kc\_act\_imp}                (Snooze);
  
 
